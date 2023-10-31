@@ -1,0 +1,12 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[user]
+	name = Athelete_Nerdy
+	email = 1257024455@qq.com
+[http]
+	proxy = http://127.0.0.1:4780
+[remote "origin"]
+	url = https://sportnerdy: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@github.com/sportnerdy/naoblog-patience.git
