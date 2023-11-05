@@ -1,6 +1,6 @@
 baseurl: /
 languageCode: en-us
-title: Hugo Ivy
+title: 余巎
 theme: "hugo-ivy"
 googleAnalytics: ""
 disqusShortname: ""
@@ -30,8 +30,8 @@ menu:
       url: "/index.xml"
 
 params:
-  description: "A Hugo theme ported from the static site generator Ivy."
-  footer: "&copy; [Yihui Xie](https://yihui.org) 2017-{Year} | [Github](https://github.com/yihui)"
+  description: "Talent is enduring patience;以教促学，以赛代练"
+  footer: "&copy; [Nao Yu](https://github.com/sportnerdy/naoyu) 2023-{Year} | [Github](https://github.com/sportnerdy/naoyu)"
   highlightjsLang: ["latex"]
   highlightjsTheme: "github"
   highlightjsVersion: "11.7.0"
