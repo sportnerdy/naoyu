@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>R语言成瘾脑电元分析 - 余巎</title>
+    <meta property="og:title" content="R语言成瘾脑电元分析 - 余巎">
+    
+    <meta name="twitter:card" content="summary">
+
+    
+    
+      
+    
+
+    
+      
+      <meta property="description" content="#&#39;echo = False&#39; hides *all* code chunks below when knitted #&#39;message = F&#39; hides *all* messages below when knitted #&#39;warning = F&#39; hides *all* warnings messages below when knitted knitr::opts_chunk$set( &amp;hellip;">
+      <meta property="og:description" content="#&#39;echo = False&#39; hides *all* code chunks below when knitted #&#39;message = F&#39; hides *all* messages below when knitted #&#39;warning = F&#39; hides *all* warnings messages below when knitted knitr::opts_chunk$set( &amp;hellip;">
+      
+    
+
+    
+    
+    
+
+    
+
+    
+    
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/github.min.css">
+
+
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+
+  </head>
+  <body class="post">
+    <header class="masthead">
+      <h1><a href="/">余巎</a></h1>
+
+<p class="tagline">Talent is enduring patience;以教促学，以赛代练</p>
+
+      <nav class="menu">
+  <input id="menu-check" type="checkbox" hidden/>
+  <label id="menu-label" for="menu-check" class="unselectable" hidden>
+    <span class="icon close-icon">✕</span>
+    <span class="icon open-icon">☰</span>
+    <span class="text">Menu</span>
+  </label>
+  <ul>
+  
+  
+  <li><a href="/">Home</a></li>
+  
+  <li><a href="/about/">About</a></li>
+  
+  <li><a href="/categories/">Categories</a></li>
+  
+  <li><a href="/tags/">Tags</a></li>
+  
+  <li><a href="/index.xml">兴趣爱好</a></li>
+  
+  
+  </ul>
+</nav>
+
+    </header>
+
+    <article class="main">
+      <header class="title">
+      
+<h1>R语言成瘾脑电元分析</h1>
+
+
+
+<h3>
+
+余巎
+
+
+
+
+
+</h3>
+
+<hr>
+
+
+      </header>
+
+
+
+
+
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 22px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1.title {
+  font-size: 38px;
+  color: Dark;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  color: Dark;
+}
+h2 { /* Header 2 */
+    font-size: 22px;
+  color: Dark;
+}
+h3 { /* Header 3 */
+  font-size: 24px;
+  font-family: "Times New Roman", Times, serif;
+  color: Dark;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+<pre><code class="language-{r">#'echo = False' hides *all* code chunks below when knitted 
+#'message = F' hides *all* messages below when knitted 
+#'warning = F' hides *all* warnings messages below when knitted 
+knitr::opts_chunk$set(
+                      collapse = TRUE,
+                      echo = TRUE, 
+                      message = F, 
+                      warning = F)
+options(scipen = 999)
+</code></pre>
+<hr>
+<p>本课程初心</p>
+<ul>
+<li>对自己:源于<strong>以教促学,为毕设开题作准备</strong>.毕设主要为问卷数据、ERP脑电指标相关数据的元分析, 要推进关键的“数据录入、数据转化”阶段, 则必须掌握目标文献涉及的统计量与效应量, 如何确定自己是否掌握? 将自己在R生态系统中数据分析的结果与原文结果核对, 无误则说明掌握.</li>
+<li>对同学: 抛砖引玉,希望目前粗糙的版本能激发大家对于R语言和脑电元分析的兴趣.
+错误之处,欢迎指正</li>
+</ul>
+<h1 id="元分析简介">元分析简介</h1>
+<h1 id="r-setup-pdf-includefalse">```{r setup-pdf, include=FALSE}</h1>
+<h1 id="pdfoptionsfamilygb1">pdf.options(family=&ldquo;GB1&rdquo;)</h1>
+<h1 id="heading">```</h1>
+<p>元分析可从数据层面分成3类:问卷数据、脑电指标数据ERP, 核磁数据fMRI.</p>
+<h2 class="tabset" id="元分析流程">元分析流程</h2>
+<h3 id="方案预注册">方案预注册</h3>
+<p>PROSPERO[Register]<a href="https://www.crd.york.ac.uk/PROSPERO/#recordDetails">https://www.crd.york.ac.uk/PROSPERO/#recordDetails</a></p>
+<h3 id="文献检索">文献检索</h3>
+<p>流程图</p>
+<pre><code class="language-{r}">library(htmltools)
+library(knitr)
+library(kableExtra)#not kable
+library(readxl)
+library(dplyr)
+
+data &lt;- read_excel(&quot;/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx&quot;, sheet = &quot;DataBase&quot;) %&gt;% 
+#C:/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup
+# Paper_search_data &lt;- data %&gt;% 
+#   dplyr::select(Database, Boolean, everything()) %&gt;% 
+  kable(align = &quot;c&quot;,  caption = &quot;文献检索关键词和数据库&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))
+data
+</code></pre>
+<p>[Rmarkdown 表格创建] <a href="https://zhuanlan.zhihu.com/p/36919769">https://zhuanlan.zhihu.com/p/36919769</a></p>
+<p>制定检索策略与筛选标准：确定检索词、数据库以及相关的筛选标准. 比如脑电元分析论文“Suicidal thoughts, behaviors, and event-related potentials: A systematic review and meta-analysis”:</p>
+<p>关键词: “event-related potential,” “event-related potentials,” “electroencepha- lography,” “EEG,” “evoked potential,” “evoked poten-tials,” “late positive potential,” “reward positivity,” “P3a,” “P3b,” “error-related negativity,” “suicide,” “suicidal,” “suicidal ideation,” “self-harm,” “self-injury,” “parasu- icide,” “suicide ideation,” “suicide attempt,” “suicide plan,” “suicidality,” “自杀风险,” “attempter,” “attempt- ers,” and “ideators.”</p>
+<h3 id="系统评价暂无">系统评价(暂无)</h3>
+<h3 id="数据录入">数据录入</h3>
+<p>明确需要纳入的数据类型:需要把<em>统计量转换为效应量</em>:
+•明确数据提取人员 •设计数据提取表格 •进行预试验 •开始数据提取 •数据核查、修改 •处理意见分歧</p>
+<p><em>参考已发表的脑电元分析</em></p>
+<ul>
+<li>
+<p>心理科学进展上: 《EMMN 受偏差−标准刺激对类型和情绪类型影响: 来自元分析的证据*》,以及医咖会的《11-系统评价与Meta分析的数据提取》. 每篇文献的以下数据将被提取: 第一作者、发表
+年份、被试个数与男女比例、被试均龄和标准差、
+计算效应量的数据(即均值+标准差、t 值、F 值或
+p 值)、实验范式、情绪类型、时间窗、偏差−标准
+刺激对、任务相关性、电极/ROI、面孔类型、单
+试次呈现图片数、图片呈现时间等; 研究中结果不显著的也要录入。</p>
+</li>
+<li>
+<p>效应量effect size: &ldquo;d-family（difference family）:：如Cohen&rsquo;s d、Hedges&rsquo; g
+r-family（correlation family）：如Pearson r、R²、η²、ω²、f
+OR-family（categorical family）：如odds ratio (OR)、risk ratio (RR)&rdquo;</p>
+</li>
+</ul>
+<h3 id="效应值合并">效应值合并</h3>
+<p>[Excel template统计量-效应量转换、不同效应量之间的相互转换] <a href="https://osf.io/6tfh5/">https://osf.io/6tfh5/</a></p>
+<h3 id="森林图">森林图</h3>
+<pre><code class="language-{r,">knitr::include_graphics(&quot;C:/Users/12570/Desktop/NY/forest.png&quot;)
+</code></pre>
+<h3 id="异质性分析">异质性分析</h3>
+<p>(1)临床基线异质性。即研究样本特征之间的差异。例如，一项研究的被试是老 人，而另一项研究的参与者是青年人。(2)统计异质性。这是效应量的异质性。这种 异质性从临床角度(例如，当我们不知道一种治疗是否非常有效，或者仅仅是因为研 究之间效应差异很大而产生的边际效应)或者从统计学(在统计上它稀释了我们对混 合效应的信心)角度来看，都很重要。(3)其他异质性来源，如与设计相关的异质性。</p>
+<p>7.1 异质性思想
+7.2 异质性指标
+7.2.1 选择异质性指标
+7.3 评估混合效应量的异质性
+7.3.1 当输出中没有呈现异质性指标
+7.4 检测异常值&amp;有影响力的个案
+7.4.1 检测极端效应值(异常值)<br>
+7.5 影响力分析<br>
+7.5.1 影响力分析 (Influence Analyses)
+7.5.2 Baujat 图
+7.5.3“去一”分析 (Leave-One-Out Analyses)
+7.6 GOSH PLOT ANALYSIS</p>
+<h3 id="敏感性分析">敏感性分析</h3>
+<p>看研究结果稳定不稳定,只要是结果方向性一致就可以。例如均提示实验组较对照组有效，且P值都小于0.05. 那么说明你的研究结果是稳定的. 敏感性分析仅对剔除后剩下的研究进行合并分析，并与剔除前的合并效应量进行对比，而不分析剔除的研究 逐一敏感性分析：逐一敏感性分析，就是每次剔除一个研究，把剩余研究进行合并</p>
+<h3 id="剪补法留一法">剪补法/留一法</h3>
+<h3 id="亚组分析">亚组分析</h3>
+<ul>
+<li>考察元分析研究中的不同亚组之间的差异，并尝试确定它们在效应大 小方面是否存在差异.比如要根据不同的疾病严重程度、性别进行亚组分析
+每个亚组分析由两部分组成:(1)每个亚组的合并后的效应量大小;(2)比较
+各亚组的效应量大小。</li>
+<li>使用混合效应模型的亚组分析:为了使用混合效应模型(亚分组内使用随机效应模型，亚分组间使用固定效应模
+型)进行亚组分析，可以使用提前准备好的 subgroup.analysis.mixed effects()函 数</li>
+</ul>
+<h3 id="元回归">元回归</h3>
+<p>亚组分析实际上就是加了类别变量的元回归分析. 在这种元回归分析中，这些亚组通常是被编码为哑变量(dummy variables)</p>
+<h3 id="调节变量分析">调节变量分析</h3>
+<p>[调节变量分析]<a href="https://zhuanlan.zhihu.com/p/360558511">https://zhuanlan.zhihu.com/p/360558511</a>
+用于研究真实效应量是否受调节变量影响,称为协变量分析更恰当，因为下述模型中不考虑变量间的交互作用。</p>
+<ul>
+<li>若调节变量（Mo）是类别数据（categorical moderator），该分析又称为亚组分析(subgroup analysis; Borenstein et al., 2019)【类似于ANOVA】. 比如(性别, 是否网游成瘾)</li>
+<li>若调节变量(Mo)是连续数据（continuous moderator），该分析更近似于多重回归分析【multiple regression analysis】. (年龄,成瘾或戒断时间)</li>
+</ul>
+<h3 class="tabset" id="发表偏倚检验">发表偏倚检验</h3>
+<h1 class="tabset" id="r语言简介">R语言简介</h1>
+<p>可进行元分析的其它软件:CMA, Review Manager&hellip;; 相比spss, Mplus, Prism, JASP..,个人偏好<em>R语言生态系统(数据整理、分析、可视化、结果报告)</em>.</p>
+<blockquote>
+<p><em>&ldquo;R is for research, python is for production&rdquo;</em>.</p>
+</blockquote>
+<ul>
+<li>分析语句数量对比</li>
+</ul>
+<pre><code class="language-{r">knitr::include_graphics(&quot;C:/Users/12570/Desktop/NY/IMG_5488.JPG&quot;)
+
+</code></pre>
+<ul>
+<li>运行时间对比</li>
+</ul>
+<pre><code class="language-{r">knitr::include_graphics(&quot;C:/Users/12570/Desktop/NY/IMG_5489.JPG&quot;)
+
+</code></pre>
+<h2 class="tabset" id="基本对象数据结构">基本对象(数据结构)</h2>
+<p>掌握基础语法(运算符)、基本对象&hellip;是为了看懂别人的代码块,然后抄过来,删、改、调试成自己需要的版本.</p>
+<h3 id="向量">向量</h3>
+<p>向量中的元素必须是同一种数据类型，简单向量中的元素为原子类型，复杂向量中的元素可以是列表等。</p>
+<pre><code class="language-{r}">R &lt;- c(x1=250,x2=250,x3=250)
+R
+</code></pre>
+<h3 id="数组">数组</h3>
+<p>创建矩阵的语法为array(data = NA, dim = length(data), dimnames = NULL)</p>
+<pre><code class="language-{r}">array(1:3, c(2,4,2))
+</code></pre>
+<h3 id="列表">列表</h3>
+<p>用list函数创建</p>
+<pre><code class="language-{r}">x &lt;- list(a=&quot;R语言&quot;,b=&quot;脑电&quot;,c=&quot;元分析&quot;,d=1:3)
+#y &lt;- list(x,5+3i)
+x
+
+</code></pre>
+<h3 id="数据框">数据框</h3>
+<pre><code class="language-{r}">library(tibble)
+df = tibble(
+  grammer = c(&quot;R语言&quot;,&quot;脑电&quot;,&quot;元分析&quot;),
+  score = c(6,6,6)
+  )
+df
+</code></pre>
+<h3 class="tabset" id="矩阵">矩阵</h3>
+<p>，data参数指定原始向量的数据，nrow参数指定行数，ncol参数指定列数，默认将原有向量按照纵向排成矩阵</p>
+<pre><code class="language-{r}">x &lt;- matrix(R,2)
+x
+</code></pre>
+<h4 id="矩阵的拼接">矩阵的拼接</h4>
+<p>矩阵的横向拼接用函数cbind，纵向拼接用函数rbind，被拼接的对象可以是矩阵，也可以是向量。他们在拼接方向需要有相同的维度。当横向拼接向量时，向量被视为行向量；当纵向拼接向量时，其被视为列向量。</p>
+<pre><code class="language-{r}">r1 &lt;- matrix(R,2)
+r2 &lt;- matrix(R,2)
+cbind(r1,r2)
+</code></pre>
+<pre><code class="language-{r}">rbind(r1,r2)
+</code></pre>
+<h4 id="矩阵级运算">矩阵级运算</h4>
+<h3 id="自定义函数">(自定义)函数</h3>
+<ul>
+<li>
+<p>函数定义:R语言的执行顺序是自上而下每条语句依次执行，所以要使用一个函数，必须在这行代码之前就定义了函数，而不能将函数定义写在函数调用之后</p>
+</li>
+<li>
+<p>函数调用: 其他脚本中的函数，则使用source函数，source的参数为脚本名而非函数名，需要用引号括起来。如果该脚本不在工作路径中，还需要在前面添加路径，如source(&ldquo;PowScript.R&rdquo;)或source(&ldquo;other/path/PowScript.R&rdquo;)。这样相当于PowScript.R脚本中的所有代码全部复制一遍放在了这一行代码处</p>
+</li>
+</ul>
+<pre><code class="language-{r}">FuncName &lt;- function (arglist) {
+  expr
+  return(value)
+}
+
+</code></pre>
+<h2 id="基础语法">基础语法</h2>
+<p>对单个表（数据框）的结构进行变换，但不利用单元格进行运算，常见的操作包括：</p>
+<ul>
+<li>行去重：distinct(.data, …, .keep_all = FALSE)</li>
+<li>行筛选：filter()</li>
+<li>列筛选：select()</li>
+<li>行排序：arrange()</li>
+<li>长转宽：spread(data, key=键所在列, value=键值所在列)</li>
+<li>宽转长：gather(data, 需要转换的各列, key = “新建的键名”, value = - “新建的键值名”)</li>
+<li>列合并：unite(data, col=新列, 需要合并的各列, sep = &ldquo;_&rdquo;, remove = - TRUE)</li>
+<li>列分裂：separate(data, col, into=c(“列1”,“列2”,…), sep = - “[^[:alnum:]]+”)</li>
+<li>嵌套与取消嵌套：nest()、unnest()</li>
+</ul>
+<h2 class="tabset" id="基本操作">基本操作</h2>
+<h3 id="表达式">表达式</h3>
+<h3 id="对象操作">对象操作</h3>
+<h1 id="r语言元分析代码应用"><strong>R语言元分析代码应用</strong></h1>
+<pre><code class="language-{r}">devtools::session_info() #编译本教程所用的R软件环境：
+</code></pre>
+<pre><code class="language-{r">knitr::include_graphics(&quot;C:/Users/12570/Desktop/NY/sucidal_meta copy.png&quot;) #/Users/alex/Desktop/R/NY/
+</code></pre>
+<h2 id="研究问题"><strong>研究问题</strong></h2>
+<p>(练习数据来自脑电元分析论文)“Suicidal thoughts, behaviors, and event-related potentials: A systematic review and meta-analysis”): <strong>自杀想法和行为Suicidal thoughts and behaviors (STBs)</strong>:</p>
+<ul>
+<li>suicidal ideation (SI)ideation and suicide attempts自杀尝试 (SA; Schmaal et al., 2019)
+问题1:</li>
+</ul>
+<ol>
+<li><strong>Q1:脑电指标能否区分 自杀想法和行为有无的两类人</strong>;provide meta-analytic estimates of whether any ERPs differ between individuals who have and have not engaged in STBs;</li>
+<li><strong>Q2:不同效应量水平下的统计效度</strong>;  examine how powered the literature is across a range of effect sizes (sample size, effect size, statistical power)</li>
+<li><strong>Q3:脑电指标能否区分 4类STB</strong>: review the literature to contextualize our meta-analytic findings and examine how various ERPs, including those that did not meet criteria for inclusion in the meta-analysis, are related to STBs.
+Regarding four separate STBs:</li>
+</ol>
+<ul>
+<li>
+<p><em>(a) those with and without suicidal ideation, 自杀想法有无</em></p>
+</li>
+<li>
+<p><em>(b) those with and without suicide attempts history,自杀行为有无</em></p>
+</li>
+<li>
+<p><em>(c) those with varying levels of suicidal risk, and 自杀风险不同的人群</em></p>
+</li>
+<li>
+<p><em>(d) differences between those with suicide attempts versus those with suicidal ideation only 自杀行为和自杀想法两类人对比</em></p>
+</li>
+<li>
+<p>单个脑电指标对应的研究问题(文献综述部分): 这个需要对该领域有比较全面和深入的理解, 脑电指标、实验任务、研究问题之间的联系、组合决定了数据录入模版和分析方法. 所以检索词也需要更广泛一些,小领域可能文献数量不足. 可以将同领域/主题的问卷数据和脑电指标数据元分析进行对比,侧重可能不同.</p>
+</li>
+</ul>
+<h2 id="加载包">加载包</h2>
+<p>[&ldquo;代码段选项&rdquo;]<a href="https://yihui.name/knitr/options">https://yihui.name/knitr/options</a>
+[R 语言必学的 10 大包] <a href="https://www.zhihu.com/question/24136262">https://www.zhihu.com/question/24136262</a></p>
+<p>R语言是一种语言, 里面所包含的包也可以当成一种小语言,函数也可以当成一种小小语言.
+方法就是</p>
+<ul>
+<li>
+<p>掌握该语言基本对象和语法,</p>
+</li>
+<li>
+<p>先跑R自带数据集 (R docu, ?meta)</p>
+</li>
+<li>
+<p>再跑自己熟悉的数据</p>
+</li>
+<li>
+<p>Data import (readx, readxl, xml2, DBI)</p>
+</li>
+<li>
+<p>Data tidying (tibble: Plus data.frame , tidyr, - stringr)</p>
+</li>
+<li>
+<p>Data transforming (dplyr, forcats:coping with factor - problems, hms, strings, lubridate)</p>
+</li>
+<li>
+<p>Data visualizing (ggplot2)</p>
+</li>
+<li>
+<p>Data analysis (Program_purrr: provide funtitons, - magrittr)</p>
+</li>
+<li>
+<p>Data modeling (broom)</p>
+</li>
+</ul>
+<ul>
+<li><code>r version[['version.string']]</code>.</li>
+</ul>
+<pre><code class="language-{r">
+packages &lt;- c('tidyverse',     # data handling
+              'metafor', #'metaSEM',#'compute.es',#'MAd',
+              'readxl',
+              'dplyr',
+              'metaviz',
+              'PRISMAstatement',#流程图
+              'meta', 
+              #'metameta',
+              'ggthemes',
+              'cocor',
+              'cowplot',
+              'kableExtra',#连接成数据框?kable
+              'gridExtra',
+              'xaringan', 
+              'knitr', #Yihui（谢益辉）编写的knitr包:美化表格
+              'DT',#交互式数据表
+              'dygraphs', #dygraph interactive plot for time series data
+              'plotly', #Main interface to plotly
+              'ggplot2', 
+              'gganimate', 
+              'visNetwork',#交互式数据图
+              'tibble', #数据框
+              'htmltools'
+              )
+  
+# Install packages not yet installed
+installed_packages &lt;- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages], repos = c(CRAN = &quot;https://cran.rstudio.com&quot;))
+}
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+packv &lt;- NULL
+for (i in 1:length(packages)) {
+  packv = rbind(packv, c(packages[i], as.character(packageVersion(packages[i]))))
+}
+colnames(packv) &lt;- c(&quot;Package&quot;, &quot;Version&quot;) 
+packv %&gt;% 
+  as_tibble %&gt;% 
+  arrange(Package) %&gt;% 
+  kable(align = &quot;l&quot;, full_width=T, fixed_thead = T, font_size = 24) %&gt;% #l=左对齐、r=右对齐、c=居中对齐
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))
+
+</code></pre>
+<p>(&ldquo;kable_styling&rdquo;)<a href="https://blog.csdn.net/renewallee/article/details/103352505">https://blog.csdn.net/renewallee/article/details/103352505</a></p>
+<h2 id="流程图">流程图</h2>
+<p>PRISMA statement: 文献的纳入标准、结果综合的统计方法等 应该严格要求作者进行清楚地报告，以保证元分析的质量;而对元分析中单个 研究偏倚的评估、数据和分析过程可获得，则可以作为鼓励性的拔高标准。第 二、期刊在对元分析稿件的初步筛选时，可参性照元分析报告标准，对关键条目进 行核对，检查文章中是否包括了这些关键条目，以检查是该元分析是否满足元 分析报告标准的基本要求，决定是否将该稿件送审</p>
+<pre><code class="language-{r">prisma(found = 298,
+       found_other = 4,
+       no_dupes = 219, 
+       screened = 219, 
+       screen_exclusions = 163, 
+       full_text = 56,
+       full_text_exclusions = 29, 
+       qualitative = 27, 
+       quantitative = 25, height = 800, width = 400)
+
+</code></pre>
+<h2 id="定义参数">定义参数</h2>
+<p>按自己的数据分析版本修改:</p>
+<pre><code class="language-{r}"># y = Hedge's g  
+# v = variance方差
+# m1 = mean of condition 1  
+# m2 = mean of condition 2  
+# sd1 = sd of condition 1  标准差
+# sd2 = sd of condition 2  
+# sdi = sd of difference  
+# n = number of subjects  
+# F = F value  
+# t = t value; two-tailed
+
+</code></pre>
+<h2 id="定义函数">定义函数</h2>
+<p>效应量需要提前计算好, 若效应量已在excel表中计算好,则可直接计算</p>
+<h2 id="数据导入分析时数据录入原始文献中的数据">数据导入(分析时)/数据录入(原始文献中的数据)</h2>
+<p>数据导入(分析时)/数据录入(原始文献中的数据): 或者说数据录入,因为不同的元分析具有相似但不同的<strong>数据分析模版</strong>, 相似在于基础元分析流程一致,不同在进阶分析的侧重点不同. 在数据录入时就必须要最好有明确或者大概的研究问题范围. 可以根据文献所含有的效应量不断调整.</p>
+<pre><code class="language-{r">library(readxl)
+library(tidyverse)
+library(kableExtra)
+data &lt;- read_excel(&quot;/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx&quot;, sheet = &quot;effect_size_coding&quot;)
+
+data &lt;- read_excel(&quot;/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx&quot;, sheet = &quot;effect_size_coding&quot;)
+
+meta_data &lt;- data %&gt;%
+  dplyr::select(Study_ID, effect_id, Description, type, g, var_g, everything()) %&gt;%  
+  mutate(&quot;abs_g&quot; = abs(g),  #绝对值和置信区间
+         &quot;lbci&quot; = g - (1.96*sqrt(var_g)), 
+         &quot;ubci&quot; = g + (1.96*sqrt(var_g)))
+
+meta_data$scoring &lt;- recode_factor(as.factor(meta_data$scoring), raw = 0, 
+                                   difference = 1, slope = 1) #数据类型转化
+
+#上面是选择数据,下面是选择数据呈现形式——数据框
+meta_data %&gt;%
+  dplyr::select(Study_ID, effect_id, Description, type, g, var_g, everything()) %&gt;% 
+  kable(align = &quot;c&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;))
+# meta_data$scoring &lt;- recode_factor(as.factor(meta_data$scoring), raw = 0, 
+#                                    difference = 1, slope = 1)
+
+datatable(meta_data, options = list(pageLength = 10)) 
+
+</code></pre>
+<h2 class="tabset" id="单个脑电指标对应的研究问题">单个脑电指标对应的研究问题</h2>
+<p>各个自杀类型的数据表</p>
+<p>文献综述部分:</p>
+<h3 class="tabset" id="ldaep">LDAEP</h3>
+<pre><code class="language-{r}">ldaep_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LDAEP&quot; &amp; Description == &quot;ideation&quot;)# 3 effect sizes 2 studies. Meta analyze
+
+ldaep_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LDAEP&quot; &amp; Description == &quot;attempt&quot;)# 12 effect sizes, 5 studies. Meta analyze
+
+ldaep_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LDAEP&quot; &amp; Description == &quot;risk&quot;)# 3 effect sizes, 3 studies. Meta analyze
+
+ldaep_sasi_data &lt;- meta_data %&gt;% 
+  filter(type == &quot;LDAEP&quot; &amp; suicide_group == 'SA' &amp; control_group == 'SI')# 11 effect sizes, 4 studies meta analyze
+
+</code></pre>
+<h4 class="tabset" id="ldaep自杀想法分析">LDAEP自杀想法分析</h4>
+<p>通过线性（混合效应）模型拟合多元/多水平固定和随机/混合效应模型的元分析函数
+[Examples]<a href="https://www.rdocumentation.org/packages/metafor/versions/2.4-0/topics/rma.mv">https://www.rdocumentation.org/packages/metafor/versions/2.4-0/topics/rma.mv</a></p>
+<pre><code class="language-{r}">ldaep_estimate &lt;- rma.mv(yi = g ~ 1, #效应大小或结果
+                         V = var_g, #方差
+                         random = list(~ 1 | effect_id, ~ 1 | Study_ID), #模型的随机效果结构
+                         data = ldaep_si_data,
+                         method = &quot;REML&quot;,  
+                         slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, #带k结果/研究标签的可选向量
+                                                              sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+ldaep_robust &lt;- robust(ldaep_estimate, cluster = ldaep_si_data$Study_ID,
+                       adjust = TRUE) 
+summary(ldaep_robust)# g = - 0.2720, p = 0.6803
+
+</code></pre>
+<h5 id="计算模型异质性">计算模型异质性</h5>
+<pre><code class="language-{r}">W &lt;- diag(1/ldaep_si_data$var_g)
+X &lt;- model.matrix(ldaep_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(ldaep_robust$sigma2) / (sum(ldaep_robust$sigma2) + (ldaep_robust$k-ldaep_robust$p)/sum(diag(P)))
+
+#### 森林图
+fig2a &lt;- viz_forest(ldaep_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = ldaep_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, 
+           text_size = 5, x_limit = c(-5.0, 4), x_breaks = c(-5, -4, -3, -2, -1, 0, 1, 2, 3, 4), 
+           xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;))) + ggtitle(&quot;LDAEP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(ldaep_robust$ci.lb,
+                                         coef(ldaep_robust),
+                                         ldaep_robust$ci.ub,
+                                          coef(ldaep_robust)),
+                          &quot;y.diamond&quot; = c(nrow(ldaep_si_data) + 1,
+                                          nrow(ldaep_si_data) + 1.3,
+                                          nrow(ldaep_si_data) + 1,
+                                          nrow(ldaep_si_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, ldaep_robust$slab)
+
+fig2a &lt;- fig2a + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                     color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                     size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                      breaks = c(4, 3, 2, 1), labels = ylabels)
+</code></pre>
+<h4 class="tabset" id="ldaep自杀行为分析">LDAEP自杀行为分析</h4>
+<pre><code class="language-{r}">ldaep_estimate &lt;- rma.mv(yi = g ~ 1,
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                         data = ldaep_sa_data,
+                         method = &quot;REML&quot;, 
+                         slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                            sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+ldaep_robust &lt;- robust(ldaep_estimate, cluster = ldaep_sa_data$Study_ID,
+                       adjust = TRUE)
+summary(ldaep_robust)# g = 0.021, p = 0.946
+</code></pre>
+<h5 id="计算模型异质性-1">计算模型异质性</h5>
+<pre><code class="language-{r}">W &lt;- diag(1/ldaep_sa_data$var_g)
+X &lt;- model.matrix(ldaep_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(ldaep_robust$sigma2) / (sum(ldaep_robust$sigma2) + (ldaep_robust$k-ldaep_robust$p)/sum(diag(P)))
+
+#### 森林图
+fig3a &lt;- viz_forest(ldaep_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = ldaep_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;LDAEP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(ldaep_robust$ci.lb,
+                                          coef(ldaep_robust),
+                                          ldaep_robust$ci.ub,
+                                          coef(ldaep_robust)),
+                          &quot;y.diamond&quot; = c(nrow(ldaep_sa_data) + 1,
+                                          nrow(ldaep_sa_data) + 1.3,
+                                          nrow(ldaep_sa_data) + 1,
+                                          nrow(ldaep_sa_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, ldaep_robust$slab)
+nrows &lt;- nrow(ldaep_sa_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig3a &lt;- fig3a + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+fig3a
+
+</code></pre>
+<h5 id="ldaep-发表偏倚">LDAEP 发表偏倚</h5>
+<pre><code class="language-{r}">ldaep_weights &lt;- weights(ldaep_robust)
+
+ldaep_sa_data$weights &lt;- ldaep_weights
+
+ldaep_sa_data &lt;- mutate(ldaep_sa_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+ldaep_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                         data = ldaep_sa_data,
+                         method = &quot;REML&quot;)
+
+ldaep_eggers &lt;- robust(ldaep_estimate, cluster = ldaep_sa_data$Study_ID, 
+                       adjust = TRUE)
+
+summary(ldaep_eggers)# not significant
+</code></pre>
+<h4 class="tabset" id="ldaep自杀风险分析">LDAEP自杀风险分析</h4>
+<pre><code class="language-{r}">ldaep_estimate &lt;- rma.mv(yi = g ~ 1,
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                         data = ldaep_risk_data,
+                         method = &quot;REML&quot;, 
+                         slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                            sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+ldaep_robust &lt;- robust(ldaep_estimate, cluster = ldaep_risk_data$Study_ID,
+                       adjust = TRUE)
+summary(ldaep_robust)# g = 0.175, p = 0.552
+</code></pre>
+<h5 id="计算模型异质性-2">计算模型异质性</h5>
+<pre><code class="language-{r}">W &lt;- diag(1/ldaep_risk_data$var_g)
+X &lt;- model.matrix(ldaep_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(ldaep_robust$sigma2) / (sum(ldaep_robust$sigma2) + (ldaep_robust$k-ldaep_robust$p)/sum(diag(P)))
+
+</code></pre>
+<h5 id="森林图-1">森林图</h5>
+<pre><code class="language-{r">fig4a &lt;- viz_forest(ldaep_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = ldaep_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5, x_limit = c(-2.0, 2.0)) + ggtitle(&quot;LDAEP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(ldaep_robust$ci.lb,
+                                          coef(ldaep_robust),
+                                          ldaep_robust$ci.ub,
+                                          coef(ldaep_robust)),
+                          &quot;y.diamond&quot; = c(nrow(ldaep_risk_data) + 1,
+                                          nrow(ldaep_risk_data) + 1.3,
+                                          nrow(ldaep_risk_data) + 1,
+                                          nrow(ldaep_risk_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, ldaep_robust$slab)
+nrows &lt;- nrow(ldaep_risk_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig4a &lt;- fig4a + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+fig4a
+</code></pre>
+<h4 class="tabset" id="ldaep-自杀行为和自杀想法对比分析sa-vs-si-analysis">LDAEP 自杀行为和自杀想法对比分析SA vs. SI analysis</h4>
+<pre><code class="language-{r}">ldaep_estimate &lt;- rma.mv(yi = g ~ 1,
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                         data = ldaep_sasi_data,
+                         method = &quot;REML&quot;,  
+                         slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                            sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+ldaep_robust &lt;- robust(ldaep_estimate, cluster = ldaep_sasi_data$Study_ID,
+                       adjust = TRUE)
+summary(ldaep_robust)# g = 0.168, p = 0.648
+</code></pre>
+<h5 id="计算模型异质性-3">计算模型异质性</h5>
+<pre><code class="language-{r}">W &lt;- diag(1/ldaep_sasi_data$var_g)
+X &lt;- model.matrix(ldaep_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(ldaep_robust$sigma2) / (sum(ldaep_robust$sigma2) + (ldaep_robust$k-ldaep_robust$p)/sum(diag(P)))
+#69.17%
+</code></pre>
+<h5 id="森林图-2">森林图</h5>
+<pre><code class="language-{r">fig5a &lt;- viz_forest(ldaep_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = ldaep_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;LDAEP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(ldaep_robust$ci.lb,
+                                          coef(ldaep_robust),
+                                          ldaep_robust$ci.ub,
+                                          coef(ldaep_robust)),
+                          &quot;y.diamond&quot; = c(nrow(ldaep_sasi_data) + 1,
+                                          nrow(ldaep_sasi_data) + 1.3,
+                                          nrow(ldaep_sasi_data) + 1,
+                                          nrow(ldaep_sasi_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, ldaep_robust$slab)
+nrows &lt;- nrow(ldaep_sasi_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig5a &lt;- fig5a + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig5a
+
+</code></pre>
+<h5 id="ldaep-自杀行为和自杀想法发表偏倚">LDAEP 自杀行为和自杀想法发表偏倚</h5>
+<pre><code class="language-{r}">ldaep_weights &lt;- weights(ldaep_robust)
+
+ldaep_sasi_data$weights &lt;- ldaep_weights
+
+ldaep_sasi_data &lt;- mutate(ldaep_sasi_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+ldaep_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                         data = ldaep_sasi_data,
+                         method = &quot;REML&quot;)
+
+ldaep_eggers &lt;- robust(ldaep_estimate, cluster = ldaep_sasi_data$Study_ID, 
+                       adjust = TRUE)
+
+summary(ldaep_eggers)# not significant
+</code></pre>
+<h3 class="tabset" id="lpp">LPP</h3>
+<pre><code class="language-{r}">lpp_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LPP&quot; &amp; Description == &quot;ideation&quot;)# 34 effect sizes, 3 studies. Meta analyze
+
+lpp_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LPP&quot; &amp; Description == &quot;attempt&quot;)# 1 study, 3 effect sizes. Meta analyze
+
+lpp_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;LPP&quot; &amp; Description == &quot;risk&quot;)# 9 effect sizes, 2 studies. Meta analyze
+
+lpp_sasi_data &lt;- meta_data %&gt;% 
+  filter(type == &quot;LPP&quot; &amp; suicide_group == 'SA' &amp; control_group == 'SI')# Same effects as SA LPP dataset
+
+</code></pre>
+<h4 class="tabset" id="lpp-自杀想法分析">LPP 自杀想法分析</h4>
+<pre><code class="language-{r}">lpp_estimate &lt;- rma.mv(yi = g ~ 1,
+                       V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                       data = lpp_si_data,
+                       method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                           sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+lpp_robust &lt;- robust(lpp_estimate, cluster = lpp_si_data$Study_ID,
+                     adjust = TRUE)
+summary(lpp_robust)# g = -0.053, p = 0.407
+
+</code></pre>
+<h5 id="计算模型异质性-4">计算模型异质性</h5>
+<pre><code class="language-{r}">W &lt;- diag(1/lpp_si_data$var_g)
+X &lt;- model.matrix(lpp_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(lpp_robust$sigma2) / (sum(lpp_robust$sigma2) + (lpp_robust$k-lpp_robust$p)/sum(diag(P)))
+#10.73%
+</code></pre>
+<h5 id="森林图-3">森林图</h5>
+<pre><code class="language-{r">fig2b &lt;- viz_forest(lpp_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = ldaep_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;LPP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(lpp_robust$ci.lb,
+                                          coef(lpp_robust),
+                                          lpp_robust$ci.ub,
+                                          coef(lpp_robust)),
+                          &quot;y.diamond&quot; = c(nrow(lpp_si_data) + 1,
+                                          nrow(lpp_si_data) + 1.3,
+                                          nrow(lpp_si_data) + 1,
+                                          nrow(lpp_si_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, lpp_robust$slab)
+nrows &lt;- nrow(lpp_si_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig2b &lt;- fig2b + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;, breaks = ybreaks, labels = ylabels)
+fig2b
+</code></pre>
+<h5 id="lpp-自杀想法发表偏倚">LPP 自杀想法发表偏倚</h5>
+<pre><code class="language-{r}">lpp_weights &lt;- weights(lpp_robust)
+
+lpp_si_data$weights &lt;- lpp_weights
+
+lpp_si_data &lt;- mutate(lpp_si_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+lpp_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                         V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                         data = lpp_si_data,
+                         method = &quot;REML&quot;)
+
+lpp_eggers &lt;- robust(lpp_estimate, cluster = lpp_si_data$Study_ID, 
+                       adjust = TRUE)
+
+summary(lpp_eggers)# not significant
+</code></pre>
+<h4 class="tabset" id="lpp-自杀风险分析">LPP 自杀风险分析</h4>
+<pre><code class="language-{r}">lpp_estimate &lt;- rma.mv(yi = g ~ 1,
+                       V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                       data = lpp_risk_data,
+                       method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                           sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+
+lpp_robust &lt;- robust(lpp_estimate, cluster = lpp_risk_data$Study_ID,
+                     adjust = TRUE)
+summary(lpp_robust)# g = -0.290, p = 0.157
+
+W &lt;- diag(1/lpp_risk_data$var_g)
+X &lt;- model.matrix(lpp_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(lpp_robust$sigma2) / (sum(lpp_robust$sigma2) + (lpp_robust$k-lpp_robust$p)/sum(diag(P)))
+#9.15%
+</code></pre>
+<h5 id="森林图-4">森林图</h5>
+<pre><code class="language-{r}">fig4b &lt;- viz_forest(lpp_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = lpp_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5, x_limit = c(-1.5, 1.0)) + ggtitle(&quot;LPP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(lpp_robust$ci.lb,
+                                          coef(lpp_robust),
+                                          lpp_robust$ci.ub,
+                                          coef(lpp_robust)),
+                          &quot;y.diamond&quot; = c(nrow(lpp_risk_data) + 1,
+                                          nrow(lpp_risk_data) + 1.3,
+                                          nrow(lpp_risk_data) + 1,
+                                          nrow(lpp_risk_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, lpp_robust$slab)
+nrows &lt;- nrow(lpp_risk_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig4b &lt;- fig4b + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig4b
+</code></pre>
+<h3 class="tabset" id="p3">P3</h3>
+<pre><code class="language-{r}">p3_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P3&quot; &amp; Description == &quot;ideation&quot;)# 53 effect sizes, 3 studies. meta analyze
+
+p3_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P3&quot; &amp; Description == &quot;attempt&quot;)# 15 effect sizes, 6 studies. Meta analyze
+
+p3_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P3&quot; &amp; Description == &quot;risk&quot;)# 28 effect sizes, 3 studies. meta analyze
+
+p3_sasi_data &lt;- meta_data %&gt;% 
+  filter(type == &quot;P3&quot; &amp; suicide_group == 'SA' &amp; control_group == 'SI')# 10 effect sizes, 3 studies. meta analyze
+
+</code></pre>
+<h4 class="tabset" id="p3-自杀想法分析">P3 自杀想法分析</h4>
+<pre><code class="language-{r}">p3_estimate &lt;- rma.mv(yi = g ~ 1,
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                      data = p3_si_data,
+                      method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                          sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+p3_robust &lt;- robust(p3_estimate, cluster = p3_si_data$Study_ID,
+                    adjust = TRUE)
+summary(p3_robust)# g = 0.067, p = 0.827
+</code></pre>
+<pre><code class="language-{r}">W &lt;- diag(1/p3_si_data$var_g)
+X &lt;- model.matrix(p3_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(p3_robust$sigma2) / (sum(p3_robust$sigma2) + (p3_robust$k-p3_robust$p)/sum(diag(P)))
+#79.75
+</code></pre>
+<h5 id="森林图-5">森林图</h5>
+<pre><code class="language-{r}">fig2c &lt;- viz_forest(p3_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = p3_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 3.5, x_limit = c(-2, 2)) + ggtitle(&quot;P300&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(p3_robust$ci.lb,
+                                          coef(p3_robust),
+                                          p3_robust$ci.ub,
+                                          coef(p3_robust)),
+                          &quot;y.diamond&quot; = c(nrow(p3_si_data) + 1,
+                                          nrow(p3_si_data) + 1.3,
+                                          nrow(p3_si_data) + 1,
+                                          nrow(p3_si_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, p3_robust$slab)
+nrows &lt;- nrow(p3_si_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig2c &lt;- fig2c + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig2c
+</code></pre>
+<h5 id="p3-自杀想法发表偏倚">P3 自杀想法发表偏倚</h5>
+<pre><code class="language-{r}">p3_weights &lt;- weights(p3_robust)
+
+p3_si_data$weights &lt;- p3_weights
+
+p3_si_data &lt;- mutate(p3_si_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+p3_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                       V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                       data = p3_si_data,
+                       method = &quot;REML&quot;)
+
+p3_eggers &lt;- robust(p3_estimate, cluster = p3_si_data$Study_ID, 
+                     adjust = TRUE)
+
+summary(p3_eggers)# not significant
+</code></pre>
+<pre><code class="language-{r}">###P3 SA Analysis
+p3_estimate &lt;- rma.mv(yi = g ~ 1,
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                      data = p3_sa_data,
+                      method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                          sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+p3_robust &lt;- robust(p3_estimate, cluster = p3_sa_data$Study_ID,
+                    adjust = TRUE)
+summary(p3_robust)# g = 0.067, p = 0.827
+</code></pre>
+<h4 class="tabset" id="p3-自杀行为分析">P3 自杀行为分析</h4>
+<pre><code class="language-{r}">W &lt;- diag(1/p3_sa_data$var_g)
+X &lt;- model.matrix(p3_robust)
+# dim(W)
+# dim(X)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W 
+100 * sum(p3_robust$sigma2) / (sum(p3_robust$sigma2) + (p3_robust$k-p3_robust$p)/sum(diag(P)))
+#93.97
+
+</code></pre>
+<h5 id="森林图-6">森林图</h5>
+<pre><code class="language-{r}">fig3b &lt;- viz_forest(p3_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = p3_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;P300&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(p3_robust$ci.lb,
+                                          coef(p3_robust),
+                                          p3_robust$ci.ub,
+                                          coef(p3_robust)),
+                          &quot;y.diamond&quot; = c(nrow(p3_sa_data) + 1,
+                                          nrow(p3_sa_data) + 1.3,
+                                          nrow(p3_sa_data) + 1,
+                                          nrow(p3_sa_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, p3_robust$slab)
+nrows &lt;- nrow(p3_sa_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig3b &lt;- fig3b + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+fig3b
+
+</code></pre>
+<h5 id="p3-自杀行为发表偏倚">P3 自杀行为发表偏倚</h5>
+<pre><code class="language-{r}">p3_weights &lt;- weights(p3_robust)
+
+p3_sa_data$weights &lt;- p3_weights
+
+p3_sa_data &lt;- mutate(p3_sa_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+p3_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                      data = p3_sa_data,
+                      method = &quot;REML&quot;)
+
+p3_eggers &lt;- robust(p3_estimate, cluster = p3_sa_data$Study_ID, 
+                    adjust = TRUE)
+
+summary(p3_eggers)# not significant
+</code></pre>
+<h4 class="tabset" id="p3-自杀风险分析">P3 自杀风险分析</h4>
+<pre><code class="language-{r}">p3_estimate &lt;- rma.mv(yi = g ~ 1,
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                      data = p3_risk_data,
+                      method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                          sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+p3_robust &lt;- robust(p3_estimate, cluster = p3_risk_data$Study_ID,
+                    adjust = TRUE)
+summary(p3_robust)# g = 0.2497, p = .3218
+
+W &lt;- diag(1/p3_risk_data$var_g)
+X &lt;- model.matrix(p3_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(p3_robust$sigma2) / (sum(p3_robust$sigma2) + (p3_robust$k-p3_robust$p)/sum(diag(P)))
+#65.09
+
+</code></pre>
+<h5 id="森林图-7">森林图</h5>
+<pre><code class="language-{r}">fig4c &lt;- viz_forest(p3_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = p3_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;P300&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(p3_robust$ci.lb,
+                                          coef(p3_robust),
+                                          p3_robust$ci.ub,
+                                          coef(p3_robust)),
+                          &quot;y.diamond&quot; = c(nrow(p3_risk_data) + 1,
+                                          nrow(p3_risk_data) + 1.3,
+                                          nrow(p3_risk_data) + 1,
+                                          nrow(p3_risk_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, p3_robust$slab)
+nrows &lt;- nrow(p3_risk_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig4c &lt;- fig4c + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig4c
+</code></pre>
+<h5 id="p3-自杀风险发表偏倚">P3 自杀风险发表偏倚</h5>
+<pre><code class="language-{r}">p3_weights &lt;- weights(p3_robust)
+
+p3_risk_data$weights &lt;- p3_weights
+
+p3_risk_data &lt;- mutate(p3_risk_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+p3_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                      data = p3_risk_data,
+                      method = &quot;REML&quot;)
+
+p3_eggers &lt;- robust(p3_estimate, cluster = p3_risk_data$Study_ID, 
+                    adjust = TRUE)
+
+summary(p3_eggers)# not significant
+</code></pre>
+<h4 class="tabset" id="p3-自杀行为和ideation对比分析sa-vs-si">P3 自杀行为和ideation对比分析SA vs. SI</h4>
+<pre><code class="language-{r}">p3_estimate &lt;- rma.mv(yi = g ~ 1,
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                      data = p3_sasi_data,
+                      method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                          sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+p3_robust &lt;- robust(p3_estimate, cluster = p3_sasi_data$Study_ID,
+                    adjust = TRUE)
+summary(p3_robust)# g = -0.40, p = 0.6422
+
+W &lt;- diag(1/p3_sasi_data$var_g)
+X &lt;- model.matrix(p3_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(p3_robust$sigma2) / (sum(p3_robust$sigma2) + (p3_robust$k-p3_robust$p)/sum(diag(P)))
+#93.06
+</code></pre>
+<h5 id="森林图-8">森林图</h5>
+<pre><code class="language-{r}">fig5b &lt;- viz_forest(p3_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = p3_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5, x_limit = c(-4, 3)) + ggtitle(&quot;P300&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(p3_robust$ci.lb,
+                                          coef(p3_robust),
+                                          p3_robust$ci.ub,
+                                          coef(p3_robust)),
+                          &quot;y.diamond&quot; = c(nrow(p3_sasi_data) + 1,
+                                          nrow(p3_sasi_data) + 1.3,
+                                          nrow(p3_sasi_data) + 1,
+                                          nrow(p3_sasi_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, p3_robust$slab)
+nrows &lt;- nrow(p3_sasi_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+
+fig5b &lt;- fig5b + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig5b
+</code></pre>
+<h5 id="p300-sa-vs-si--only-发表偏倚">P300 SA vs. SI -only 发表偏倚</h5>
+<pre><code class="language-{r}">p3_weights &lt;- weights(p3_robust)
+
+p3_sasi_data$weights &lt;- p3_weights
+
+p3_sasi_data &lt;- mutate(p3_sasi_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+p3_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                      data = p3_sasi_data,
+                      method = &quot;REML&quot;)
+
+p3_eggers &lt;- robust(p3_estimate, cluster = p3_sasi_data$Study_ID, 
+                    adjust = TRUE)
+
+summary(p3_eggers)# Significant 发表偏倚
+
+</code></pre>
+<h3 class="tabset" id="rewp">RewP</h3>
+<pre><code class="language-{r}">rewp_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;RewP&quot; &amp; Description == &quot;ideation&quot;)# 12 effect sizes, 3 studies. Meta analyze
+
+rewp_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;RewP&quot; &amp; Description == &quot;attempt&quot;)# 5 effect sizes, 2 studies. Meta analyze
+
+rewp_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;RewP&quot; &amp; Description == &quot;risk&quot;)# 3 effect sizes, 1 study. Narrative review only 
+
+rewp_sasi_data &lt;- meta_data %&gt;% 
+  filter(type == &quot;RewP&quot; &amp; suicide_group == 'SA' &amp; control_group == 'SI')# 0 effect sizes
+</code></pre>
+<h4 class="tabset" id="rewp-si-analysis">RewP SI Analysis</h4>
+<pre><code class="language-{r}">rewp_estimate &lt;- rma.mv(yi = g ~ 1,
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                      data = rewp_si_data,
+                      method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                          sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+rewp_robust &lt;- robust(rewp_estimate, cluster = rewp_si_data$Study_ID,
+                    adjust = TRUE)
+summary(rewp_robust)# g = -0.06, p = .0406
+
+W &lt;- diag(1/rewp_si_data$var_g)
+X &lt;- model.matrix(rewp_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(rewp_robust$sigma2) / (sum(rewp_robust$sigma2) + (rewp_robust$k-rewp_robust$p)/sum(diag(P)))
+#4.29%
+
+</code></pre>
+<h5 id="森林图-9">森林图</h5>
+<pre><code class="language-{r}">fig2d &lt;- viz_forest(rewp_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = rewp_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;RewP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(rewp_robust$ci.lb,
+                                          coef(rewp_robust),
+                                          rewp_robust$ci.ub,
+                                          coef(rewp_robust)),
+                          &quot;y.diamond&quot; = c(nrow(rewp_si_data) + 1,
+                                          nrow(rewp_si_data) + 1.3,
+                                          nrow(rewp_si_data) + 1,
+                                          nrow(rewp_si_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, rewp_robust$slab)
+nrows &lt;- nrow(rewp_si_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig2d &lt;- fig2d + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+fig2d
+</code></pre>
+<h5 id="rewp-si-发表偏倚">RewP SI 发表偏倚</h5>
+<pre><code class="language-{r}">rewp_weights &lt;- weights(rewp_robust)
+
+rewp_si_data$weights &lt;- rewp_weights
+
+rewp_si_data &lt;- mutate(rewp_si_data, &quot;sqrt_weights&quot; = sqrt(weights))
+
+rewp_estimate &lt;- rma.mv(yi = abs_g ~ sqrt_weights, 
+                      V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID), 
+                      data = rewp_si_data,
+                      method = &quot;REML&quot;)
+
+rewp_eggers &lt;- robust(rewp_estimate, cluster = rewp_si_data$Study_ID, 
+                    adjust = TRUE)
+
+summary(rewp_eggers)# not significant
+
+</code></pre>
+<h4 class="tabset" id="rewp-sa-analysis">RewP SA Analysis</h4>
+<pre><code class="language-{r}">rewp_estimate &lt;- rma.mv(yi = g ~ 1,
+                        V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                        data = rewp_sa_data,
+                        method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                            sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+rewp_robust &lt;- robust(rewp_estimate, cluster = rewp_sa_data$Study_ID,
+                      adjust = TRUE)
+summary(rewp_robust)# g = -0.12, p = .5449
+
+W &lt;- diag(1/rewp_sa_data$var_g)
+X &lt;- model.matrix(rewp_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(rewp_robust$sigma2) / (sum(rewp_robust$sigma2) + (rewp_robust$k-rewp_robust$p)/sum(diag(P)))
+#12.33%
+</code></pre>
+<h5 id="森林图-10">森林图</h5>
+<pre><code class="language-{r}">fig3c &lt;- viz_forest(rewp_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = rewp_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5, x_limit = c(-2.25, 2)) + ggtitle(&quot;RewP&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(rewp_robust$ci.lb,
+                                          coef(rewp_robust),
+                                          rewp_robust$ci.ub,
+                                          coef(rewp_robust)),
+                          &quot;y.diamond&quot; = c(nrow(rewp_sa_data) + 1,
+                                          nrow(rewp_sa_data) + 1.3,
+                                          nrow(rewp_sa_data) + 1,
+                                          nrow(rewp_sa_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, rewp_robust$slab)
+nrows &lt;- nrow(rewp_sa_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig3c &lt;- fig3c + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig3c
+</code></pre>
+<h3 id="cnv">CNV</h3>
+<pre><code class="language-{r}">cnv_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;CNV&quot; &amp; Description == &quot;ideation&quot;)# 3 effect sizes, 1 study. review only 
+
+cnv_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;CNV&quot; &amp; Description == &quot;attempt&quot;)# 4 effect sizes, 4 studies. Meta analyze
+
+cnv_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;CNV&quot; &amp; Description == &quot;risk&quot;)# no effects
+
+cnv_sasi_data &lt;- meta_data %&gt;% 
+  filter(type == &quot;CNV&quot; &amp; suicide_group == 'SA' &amp; control_group == 'SI')# 1 effect sizes
+
+</code></pre>
+<h4 class="tabset" id="cnv-sa-analysis">CNV SA Analysis</h4>
+<pre><code class="language-{r}">cnv_estimate &lt;- rma.mv(yi = g ~ 1,
+                        V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),
+                        data = cnv_sa_data,
+                        method = &quot;REML&quot;, slab = paste(paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                                                            sep = &quot;&quot;), effect_id, sep = &quot; &quot;))
+
+cnv_robust &lt;- robust(cnv_estimate, cluster = cnv_sa_data$Study_ID,
+                      adjust = TRUE)
+summary(cnv_robust)# g = 0.44, p = 0.4157
+
+W &lt;- diag(1/cnv_sa_data$var_g)
+X &lt;- model.matrix(cnv_robust)
+P &lt;- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W
+100 * sum(cnv_robust$sigma2) / (sum(cnv_robust$sigma2) + (cnv_robust$k-cnv_robust$p)/sum(diag(P)))
+#84.45%
+</code></pre>
+<h5 id="森林图-11">森林图</h5>
+<pre><code class="language-{r}">fig3d &lt;- viz_forest(cnv_robust, type = &quot;study_only&quot;, variant = &quot;classic&quot;, study_labels = cnv_estimate[[&quot;slab&quot;]], 
+                    col = &quot;#1e89c6&quot;, xlab = expression(&quot;Hedges' &quot; * italic(&quot;g&quot;)), 
+                    text_size = 5) + ggtitle(&quot;CNV&quot;)
+
+summarydata &lt;- data.frame(&quot;x.diamond&quot; = c(cnv_robust$ci.lb,
+                                          coef(cnv_robust),
+                                          cnv_robust$ci.ub,
+                                          coef(cnv_robust)),
+                          &quot;y.diamond&quot; = c(nrow(cnv_sa_data) + 1,
+                                          nrow(cnv_sa_data) + 1.3,
+                                          nrow(cnv_sa_data) + 1,
+                                          nrow(cnv_sa_data) + 0.7),
+                          &quot;diamond_group&quot; = rep(1, times = 4))
+
+ylabels &lt;- c(&quot;Summary&quot;, cnv_robust$slab)
+nrows &lt;- nrow(cnv_sa_data)
+ybreaklim &lt;- nrows + 1
+ybreaks &lt;- c(sort(1:ybreaklim, decreasing = TRUE))
+
+fig3d &lt;- fig3d + geom_polygon(data = summarydata, aes(x = x.diamond, y = y.diamond, group = diamond_group), 
+                              color= &quot;black&quot;, fill = &quot;#1e89c6&quot;, 
+                              size = 0.1) + scale_y_continuous(name = &quot;&quot;,
+                                                               breaks = ybreaks, labels = ylabels)
+
+
+
+fig3d
+</code></pre>
+<h3 id="n2">N2</h3>
+<pre><code class="language-{r}">n2_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;N2&quot; &amp; Description == &quot;ideation&quot;)# no effects
+
+n2_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;N2&quot; &amp; Description == &quot;attempt&quot;)# 6 effect sizes, 1 study. narrative review
+
+n2_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;N2&quot; &amp; Description == &quot;risk&quot;)# 2 effects, 1 study. Narrative Review
+
+# P2
+p2_si_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P2&quot; &amp; Description == &quot;ideation&quot;)# 3 effects, 1 study. narrative
+
+p2_sa_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P2&quot; &amp; Description == &quot;attempt&quot;)# 1 effect, 1 study. Narrative Review
+
+p2_risk_data &lt;- meta_data %&gt;%
+  filter(type == &quot;P2&quot; &amp; Description == &quot;risk&quot;)# no studies
+
+
+</code></pre>
+<h2 id="统计效度">统计效度</h2>
+<p>（1）样本量（sample size）
+（2）效应量（effect size）
+（3）显著性水平（significance level）
+（4）效力（power）
+知三得一</p>
+<p>Format all studies needed for mapower_ul</p>
+<pre><code class="language-{r}">study1_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;1&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+ 
+study2_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;2&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study3_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;3&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study4_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;4&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study5_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;5&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+
+study6_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;6&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study7_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;7&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study8_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;8&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study9_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;9&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study10_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;10&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study11_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;11&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study12_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;12&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study13_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;13&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study14_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;14&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study15_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;15&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study16_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;16&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study17_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;17&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study18_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;18&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study19_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;19&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study20_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;20&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study21_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;21&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study22_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;22&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study23_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;23&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study24_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;24&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study25_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;25&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study26_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;26&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+
+study27_data &lt;- meta_data %&gt;% 
+  filter(Study_ID == &quot;27&quot;) %&gt;%
+  mutate(&quot;study&quot; = paste(paste(Authors, Year, sep=&quot;, (&quot;), &quot;)&quot;, 
+                         sep = &quot;&quot;)) %&gt;% 
+  select(study, &quot;yi&quot; = g, &quot;lower&quot; = lbci, &quot;upper&quot; = ubci)
+</code></pre>
+<!-- ## 每个研究结果在对应的效应量之间的统计效度  -->
+<!-- ```{r} -->
+<!-- power_1 <- mapower_ul(dat = study1_data,  -->
+<!--                           observed_es = 0.00,  -->
+<!--                           name = study1_data$study[1]) -->
+<!-- power1_data <- power_1$power_median_dat -->
+<!-- power_2 <- mapower_ul(dat = study2_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study2_data$study[1]) -->
+<!-- power2_data <- power_2$power_median_dat -->
+<!-- power_3 <- mapower_ul(dat = study3_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study3_data$study[1]) -->
+<!-- power3_data <- power_3$power_median_dat -->
+<!-- power_4 <- mapower_ul(dat = study4_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study4_data$study[1]) -->
+<!-- power4_data <- power_4$power_median_dat -->
+<!-- power_5 <- mapower_ul(dat = study5_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study5_data$study[1]) -->
+<!-- power5_data <- power_5$power_median_dat -->
+<!-- power_6 <- mapower_ul(dat = study6_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study6_data$study[1]) -->
+<!-- power6_data <- power_6$power_median_dat -->
+<!-- power_7 <- mapower_ul(dat = study7_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study7_data$study[1]) -->
+<!-- power7_data <- power_7$power_median_dat -->
+<!-- power_8 <- mapower_ul(dat = study8_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study8_data$study[1]) -->
+<!-- power8_data <- power_8$power_median_dat -->
+<!-- power_9 <- mapower_ul(dat = study9_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study9_data$study[1]) -->
+<!-- power9_data <- power_9$power_median_dat -->
+<!-- power_10 <- mapower_ul(dat = study10_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study10_data$study[1]) -->
+<!-- power10_data <- power_10$power_median_dat -->
+<!-- power_11 <- mapower_ul(dat = study11_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study11_data$study[1]) -->
+<!-- power11_data <- power_11$power_median_dat -->
+<!-- power_12 <- mapower_ul(dat = study12_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study12_data$study[1]) -->
+<!-- power12_data <- power_12$power_median_dat -->
+<!-- power_13 <- mapower_ul(dat = study13_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study13_data$study[1]) -->
+<!-- power13_data <- power_13$power_median_dat -->
+<!-- power_14 <- mapower_ul(dat = study14_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study14_data$study[1]) -->
+<!-- power14_data <- power_14$power_median_dat -->
+<!-- power_15 <- mapower_ul(dat = study15_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study15_data$study[1]) -->
+<!-- power15_data <- power_15$power_median_dat -->
+<!-- power_16 <- mapower_ul(dat = study16_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study16_data$study[1]) -->
+<!-- power16_data <- power_16$power_median_dat -->
+<!-- power_17 <- mapower_ul(dat = study17_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study17_data$study[1]) -->
+<!-- power17_data <- power_17$power_median_dat -->
+<!-- power_18 <- mapower_ul(dat = study18_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study18_data$study[1]) -->
+<!-- power18_data <- power_18$power_median_dat -->
+<!-- power_19 <- mapower_ul(dat = study19_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study19_data$study[1]) -->
+<!-- power19_data <- power_19$power_median_dat -->
+<!-- power_20 <- mapower_ul(dat = study20_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study20_data$study[1]) -->
+<!-- power20_data <- power_20$power_median_dat -->
+<!-- power_21 <- mapower_ul(dat = study21_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study21_data$study[1]) -->
+<!-- power21_data <- power_21$power_median_dat -->
+<!-- power_22 <- mapower_ul(dat = study22_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study22_data$study[1]) -->
+<!-- power22_data <- power_22$power_median_dat -->
+<!-- power_23 <- mapower_ul(dat = study23_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study23_data$study[1]) -->
+<!-- power23_data <- power_23$power_median_dat -->
+<!-- power_24 <- mapower_ul(dat = study24_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study24_data$study[1]) -->
+<!-- power24_data <- power_24$power_median_dat -->
+<!-- power_25 <- mapower_ul(dat = study25_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study25_data$study[1]) -->
+<!-- power25_data <- power_25$power_median_dat -->
+<!-- power_26 <- mapower_ul(dat = study26_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study26_data$study[1]) -->
+<!-- power26_data <- power_26$power_median_dat -->
+<!-- power_27 <- mapower_ul(dat = study27_data,  -->
+<!--                       observed_es = 0.00,  -->
+<!--                       name = study27_data$study[1]) -->
+<!-- power27_data <- power_27$power_median_dat -->
+<!-- powerall_data <- rbind(power1_data, power2_data, power3_data, power4_data,  -->
+<!--                        power5_data, power6_data, power7_data, power8_data, power9_data, -->
+<!--                        power10_data, power11_data, power12_data, power13_data,  -->
+<!--                        power14_data, power15_data, power16_data, power17_data,  -->
+<!--                        power18_data, power19_data, power20_data, power21_data,  -->
+<!--                        power22_data, power23_data, power24_data, power25_data,  -->
+<!--                        power26_data, power27_data -->
+<!--                        ) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- powerall_data <- powerall_data %>%  -->
+<!--   select("study_name" = meta_analysis_name, es01:es1) -->
+<!-- min_max_power <- (min(powerall_data[,11])) * 100 -->
+<!-- # Calculate maximum observed median effect size power -->
+<!-- max_max_power <- (max(powerall_data[,11])) * 100 -->
+<!-- # Calculate mean observed median effect size power -->
+<!-- mean_max_power <- (mean(powerall_data[,11])) * 100 -->
+<!-- # Calculate median observed median effect size power -->
+<!-- median_max_power <- (median(powerall_data[,11])) * 100 -->
+<!-- long_power_data <- pivot_longer(powerall_data, es01:es1, names_to = "effect_size") -->
+<!-- sufficient_power <- long_power_data %>%  -->
+<!--   filter(value >= 0.8) -->
+<!-- mean(.4, .8, .8, .8, .4, .9, .4, 1.0, .9, .8, 1.0, .9, .9, .9, .9,  -->
+<!--        .7, .8, .8, .7, .8, .5)  -->
+<!-- ``` -->
+<!-- ## 画图表(汇总){.tabset} -->
+<!-- ### Figure 2 -->
+<!-- ```{r} -->
+<!-- figure2 <- plot_grid(fig2a, fig2b, fig2c, fig2d, labels = c('A', 'B', 'C', 'D')) -->
+<!-- save_plot("fig2.png", figure2, ncol = 2, base_height = 12, base_width = 6, dpi = 500) -->
+<!-- figure2 -->
+<!-- ``` -->
+<!-- ### Figure 3 -->
+<!-- ```{r} -->
+<!-- figure3 <- plot_grid(fig3a, fig3b, fig3c, fig3d, labels = c('A', 'B', 'C', 'D')) -->
+<!-- save_plot("fig3.png", figure3, ncol = 2, base_height = 12, base_width = 6, dpi = 500) -->
+<!-- figure3 -->
+<!-- ``` -->
+<!-- ### Figure 4 -->
+<!-- ```{r} -->
+<!-- figure4 <- plot_grid(fig4a, fig4b, fig4c, labels = c('A', 'B', 'C')) -->
+<!-- save_plot("fig4.png", figure4, ncol = 2, base_height = 12, base_width = 6, dpi = 500) -->
+<!-- figure4 -->
+<!-- ``` -->
+<!-- ### Figure 5 SA vs SI:LDAER, P300 -->
+<!-- ```{r} -->
+<!-- figure5 <- plot_grid(fig5a, fig5b, labels = c('A', 'B', 'C')) -->
+<!-- save_plot("fig5.png", figure5, ncol = 2, base_height = 12, base_width = 6, dpi = 500) -->
+<!-- figure5 -->
+<!-- ``` -->
+<!-- ### Figure 6 热效应图 -->
+<!-- ```{r} -->
+<!-- firepower_plot <- ggplot(data = long_power_data) + -->
+<!--   geom_tile(aes( -->
+<!--     x = effect_size, -->
+<!--     y = reorder(study_name, desc(study_name)), -->
+<!--     fill = value -->
+<!--   )) + -->
+<!--   theme(aspect.ratio = 0.3) + -->
+<!--   scale_fill_gradient2( -->
+<!--     name = "Power", -->
+<!--     midpoint = 0.5, -->
+<!--     low = "white", -->
+<!--     mid = "orange", -->
+<!--     high = "red" -->
+<!--   )+ theme_tufte(base_family = "Helvetica") -->
+<!-- firepower_plot <- -->
+<!--   firepower_plot + theme(strip.text.x = element_blank()) -->
+<!-- firepower_plot <- firepower_plot + labs(x ="Effect size", y = "") -->
+<!-- firepower_plot <- -->
+<!--   firepower_plot + scale_x_discrete( -->
+<!--     labels = c( -->
+<!--       "es01" = "0.1", -->
+<!--       "es02" = "0.2", -->
+<!--       "es03" = "0.3", -->
+<!--       "es04" = "0.4", -->
+<!--       "es05" = "0.5", -->
+<!--       "es06" = "0.6", -->
+<!--       "es07" = "0.7", -->
+<!--       "es08" = "0.8", -->
+<!--       "es09" = "0.9", -->
+<!--       "es1" = "1" -->
+<!--     )) -->
+<!-- firepower_plot <- firepower_plot + theme(text = element_text(size = 20)) -->
+<!-- tiff(file = "figure_6.tiff", width = 12, height = 10, units = "in",  -->
+<!--      res = 300, compression = "lzw") -->
+<!-- firepower_plot -->
+<!-- dev.off() -->
+<!-- # Test interaction in Lee et al., 2014 paper -->
+<!-- cocor.indep.groups(-0.387, -0.012, 53, 68, test = "zou2007") -->
+<!-- ``` -->
+<!-- ## 额外分析 -->
+<!-- ### (自杀研究问题类型)分组分析——所有脑电指标合并 -->
+<!-- ```{r } -->
+<!-- ideation_data <- meta_data %>%  -->
+<!--   filter(Description == "ideation" & abs_g < 2.9)#One outlier effect size  -->
+<!-- ideation_data$type <- recode_factor(as.factor(ideation_data$type), LDAEP = 0,  -->
+<!--                                     LPP = 1, RewP = 2, P3 = 3, CNV = 4, P2 = 5) -->
+<!-- attempt_data <- meta_data %>%  -->
+<!--   filter(Description == "attempt" & abs_g < 1.9)#three outliers  -->
+<!-- attempt_data$type <- recode_factor(as.factor(attempt_data$type), LDAEP = 0,  -->
+<!--                                    LPP = 1, RewP = 2, P3 = 3, CNV = 4, N2 = 5,  -->
+<!--                                    N1 = 6, PINV = 6, SPN = 6) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- risk_data <- meta_data %>%  -->
+<!--   filter(Description == "risk") -->
+<!-- risk_data$type <- recode_factor(as.factor(risk_data$type), LDAEP = 0, LPP = 1,  -->
+<!--                                    RewP = 2, P3 = 3, N2 = 4) -->
+<!-- sasi_data <- meta_data %>%  -->
+<!--   filter(suicide_group == 'SA' & control_group == 'SI' & abs_g < 1.90)# Two outliers -->
+<!-- sasi_data$type <- recode_factor(as.factor(sasi_data$type), LDAEP = 0, LPP = 1,  -->
+<!--                  P3 = 2, N2 = 3, CNV = 4, N1 = 4) -->
+<!-- ``` -->
+<!-- ### 自杀想法元分析(所有脑电指标合并) -->
+<!-- ```{r} -->
+<!-- ideation_estimate <- rma.mv(yi = abs_g ~ 1,  -->
+<!--                     V = var_g, random = list(~ 1 | effect_id, ~ 1 | Study_ID),  -->
+<!--                     data = ideation_data, -->
+<!--                     method = "REML",  -->
+<!--                     slab = paste(paste(paste(Authors, Year, sep=", ("), ")",  -->
+<!--                                        sep = ""), effect_id, sep = " ")) -->
+<!-- robust_ideation <- robust(ideation_estimate, cluster = ideation_data$Study_ID, -->
+<!--                           adjust = TRUE) -->
+<!-- summary(robust_ideation) -->
+<!-- ``` -->
+<!-- #### 异质性 -->
+<!-- ```{r} -->
+<!-- W <- diag(1/ideation_data$var_g) -->
+<!-- X <- model.matrix(robust_ideation) -->
+<!-- P <- W - W %*% X %*% solve(t(X) %*% W %*% X) %*% t(X) %*% W -->
+<!-- 100 * sum(robust_ideation$sigma2) / (sum(robust_ideation$sigma2) + (robust_ideation$k-robust_ideation$p)/sum(diag(P))) -->
+<!-- # I2 = 18.46% -->
+<!-- ``` -->
+<!-- ### 漏斗图{.tabset} -->
+<!-- 分析结果是否存在偏倚，如发表偏倚或其他偏倚. 一般以单个研究的效应量为横坐标，样本含量为纵坐标做的散点图.样本量小，研究精度低，分布在漏斗图的底部，向周围分散； -->
+<!-- 样本量大，研究精度高，分布在漏斗图的顶部，向中间集中 -->
+<!-- ```{r} -->
+<!-- funnel_1 <- viz_sunset(robust_ideation,  -->
+<!--            contours = TRUE, -->
+<!--            power_contours = "continuous",  -->
+<!--            text_size = 5, power_stats = FALSE,  -->
+<!--            x_breaks = c(-1.5, -1.0, -0.5, 0, 0.5, 1, 1.5),  -->
+<!--            x_limit = c(-1.75, 1.75),  -->
+<!--            xlab = expression("Hedges' " * italic("g"))) + theme(legend.position = "none") -->
+<!-- funnel_power <- metafor::funnel(robust_ideation)# Used later to calculate power -->
+<!-- #SI 发表偏倚 在后面 -->
+<!-- ``` -->
+<!-- <http://www.idata8.com/rpackage/meta/forest.meta.html> -->
+<!-- - meta包metagen( -->
+<!--   参数说明： -->
+<!-- TE : 治疗效果的估计，例如对数危险比或风险差。 -->
+<!-- seTE : 治疗估计的标准误差。 -->
+<!-- studlab : 带有研究标签的可选向量。 -->
+<!-- data : 包含研究信息的可选数据框。 -->
+<!-- subset : 指定要使用的研究子集的可选向量（请参阅详细信息）。 -->
+<!-- exclude : 一个可选的向量，指定从荟萃分析中排除的研究，但是，包括在打印输出和森林图中（见细节）。 -->
+<!-- sm : 表示基本摘要度量的字符串，例如“RD”、“RR”、“OR”、“ASD”、“HR”、“MD”、“SMD”或“ROM”。 -->
+<!-- method.ci : 一种字符串，表示用哪种方法来计算个别研究的置信区间。 -->
+<!-- level : 用于计算单个研究的置信区间的水平。 -->
+<!-- level.comb : 用于计算汇总估计的置信区间的水平。 -->
+<!-- comb.fixed : 指示是否应进行固定效应元分析的逻辑。 -->
+<!-- comb.random : 指示是否应进行随机效应数据分析的逻辑。 -->
+<!-- overall : 指示是否应报告总体摘要的逻辑。如果不应报告总体结果，则此参数在具有子组的元分析中很有用。 -->
+<!-- - meta包forest( -->
+<!-- 参数说明： -->
+<!-- x : meta类的对象。 -->
+<!-- sortvar : 用于对单个研究进行排序的可选向量（长度必须与x$TE). -->
+<!-- studlab : 指示是否应在图表中打印研究标签的逻辑。还可以提供带有研究标签的向量（长度必须与x$TE 然后）。 -->
+<!-- layout : 指定森林图布局的字符串（请参阅详细信息）。 -->
+<!-- comb.fixed : 指示是否应绘制固定效应估计的逻辑。 -->
+<!-- comb.random : 指示是否应绘制random effects estimate的逻辑图。 -->
+<!-- overall : 指示是否应绘制总体摘要的逻辑表达式。如果摘要只应绘制在组级别上，则此参数在具有子组的元分析中非常有用。 -->
+<!-- text.fixed : 绘图中用于标记组合固定效果估计的字符串。 -->
+<!-- text.random : 绘图中用于标记组合随机效果估计的字符串。 -->
+<!-- lty.fixed : 线型（合并固定效应估计） -->
+<!-- ```{r} -->
+<!-- library(metafor) -->
+<!-- library(meta) -->
+<!-- m.hksj <- metagen(g, var_g, data = p3_sa_data, studlab = paste(Authors), comb.fixed = FALSE,  #P3am_IGD_data -->
+<!-- comb.random = TRUE, -->
+<!-- method.tau = "SJ", hakn = TRUE, -->
+<!-- prediction = TRUE, sm = "SMD") -->
+<!-- m.hksj -->
+<!-- ``` -->
+<!-- 7.5 影响力分析   -->
+<!-- 7.5.1 影响力分析 (Influence Analyses)  -->
+<!-- 7.5.2 Baujat 图  -->
+<!-- 7.5.3“去一”分析 (Leave-One-Out Analyses)  -->
+<!-- 7.6 GOSH PLOT ANALYSIS -->
+<!-- ```{r} -->
+<!-- library(dmetar) -->
+<!-- InA <- InfluenceAnalysis(x = m.hksj, random = TRUE)  #x = viz_forest.g,random = TRUE)  # -->
+<!-- plot(InA) -->
+<!-- plot(InA, "influence") #输出 influence 图  -->
+<!-- plot(InA, "Baujat") #Baujat 图 -->
+<!-- plot(InA, "I2") #输出按 I^2 排序的图  -->
+<!-- plot(InA, "es") #输出按 Effect size 排序的图 -->
+<!-- #plot(inf.analysis, "es") #输出按 Effect size 排序的图 -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- library(metafor) -->
+<!-- m.rma <- rma(yi = m.hksj$TE, #yi = g ~ 1, V = var_g -->
+<!--              sei = m.hksj$seTE, -->
+<!--              method = m.hksj$method.tau, -->
+<!--              test = "knha") -->
+<!-- ``` -->
+<!-- <!-- # ```{r} --> -->
+<!-- <!-- # dat.gosh <- gosh(m.rma) --> -->
+<!-- <!-- # plot(dat.gosh, alpha=0.1, col="blue") --> -->
+<!-- <!-- # ``` --> -->
+<!-- <!-- ### 私人订制数据分析仓库(未做完) {.tabset} --> -->
+<!-- <!-- #### 因素分析 --> -->
+<!-- <!-- #### 中介 --> -->
+<!-- <!-- #### 调节 --> -->
+<!-- <!-- #### 结构方程模型 --> -->
+<!-- <!-- #### 网络分析 --> -->
+<!-- <!-- #### 进阶元分析 --> -->
+<h1 id="元分析r代码错误复盘"><strong>“元分析R代码错误”复盘</strong></h1>
+<p>(中英文批量修改replace)
+看模块简的逻辑关系:横向并列,纵向</p>
+<ol>
+<li>Question: “&gt; W &lt;- diag(1/p3_sa_data$var_g)
+X &lt;- model.matrix(p3_robust)
+P &lt;- W - W %<em>% X %</em>% solve(t(X) %<em>% W %</em>% X) %<em>% t(X) %</em>% W” —— Error in W %*% X : non-conformable arguments”</li>
+</ol>
+<p>Answer:  %*% 此运算符用于将矩阵与其转置相乘; dim(W),dim(X);发现上面少了段代码</p>
+<ol start="2">
+<li>
+<p>“Error in <code>check_breaks_labels()</code>:
+! <code>breaks</code> and <code>labels</code> must have the same length”
+A: This leads to annoying warnings. So I should replace size by linewidth if the loaded version of ggplot2 is 3.4.0 or greater.
+labels是图中所显示标注的刻度（主观），breaks是实际中要分成的刻度（客观）</p>
+</li>
+<li>
+<p>could not find function &ldquo;weightfunct&rdquo;, &ldquo;s_power:<br>
+个体数据分析思路不同,自定义函数不同.</p>
+</li>
+<li>
+<p>插入图片/文档
+False: #![dad](&rdquo;./Users/alex/Desktop/R/NY/sucidal_meta copy.png&quot;)
+True: ./sucidal_meta copy.png
+工作目录重要, <em>因为用setwd()发现工作目录就在&quot;/Users/alex/Desktop/R/NY&quot;, 工作目录重复了</em></p>
+</li>
+<li>
+<p>“载入了名字空间‘htmltools’ 0.5.3，但需要的是＞= 0.5.4; &ldquo;renv::repair()&rdquo;
+load the latest package.</p>
+</li>
+</ol>
+<p>”</p>
+<h1 id="总结">总结</h1>
+<ul>
+<li>
+<p>R语言: <strong>丝滑的逻辑运算——逻辑清晰,环环相扣, 丰富的形式展现&ndash;形式丰富,高效缜密</strong>;需要掌握更多:R markdown, shiny APP; 可视化、动态、交互&hellip;; html语法,css, LaTex, Quarto&hellip;.</p>
+</li>
+<li>
+<p><em>脑电: 研究问题所对应的脑电指标和实验范式/任务、 电极点</em></p>
+</li>
+<li>
+<p>元分析:方法差异大, 单从作图数量看, 基础元分析2,3个图, 进阶元分析十多个图; 未报告数据的处理方法</p>
+</li>
+</ul>
+<h2 id="致谢老师参考信息">致谢老师/参考信息:</h2>
+<ul>
+<li>
+<p>视频和个人网页: <strong>谢益辉老师</strong>,youtobe的 Martin.. Gregin(热情、专业), <a href="https://www.rdocumentation.org/">https://www.rdocumentation.org/</a> 、郭晓老师、李东风老师、万能的谷歌;</p>
+</li>
+<li>
+<p>微信公众号: 荷兰心理统计联盟,统计之都,医咖会..</p>
+</li>
+<li>
+<p>书:《零基础学习R语言》《R语言编程指南》,《R语言编程——基于tidyverse》by 张敬信老师,《R语言编程基础》&hellip;</p>
+</li>
+<li>
+<p><em>最重要的是自学的方法:一个人走得快,一群人走得远,在R生态系统中找到一群志同道合的小伙伴</em></p>
+</li>
+</ul>
+
+
+
+  <footer>
+  
+<nav class="post-nav">
+  <span class="nav-prev"></span>
+  <span class="nav-next"></span>
+</nav>
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.js" defer></script>
+<script src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.js" defer></script>
+
+  
+
+
+
+
+
+
+
+<script src="//cdn.jsdelivr.net/combine/gh/highlightjs/cdn-release@11.7.0/build/highlight.min.js,npm/@xiee/utils/js/load-highlight.js" defer></script>
+
+
+
+  
+  <hr>
+  <div class="copyright">© <a href="https://github.com/sportnerdy/naoyu">Nao Yu</a> 2023-2023 | <a href="https://github.com/sportnerdy/naoyu">Github</a></div>
+  
+  </footer>
+  </article>
+  
+  </body>
+</html>
+
