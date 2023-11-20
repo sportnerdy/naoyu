@@ -20,17 +20,12 @@ menu:
     - name: "About"
       url: "/about/"
       weight: 2
-    - name: "Categories"
-      url: "/categories/"
-      weight: 3
-    - name: "Tags"
-      url: "/tags/"
-      weight: 4
     - name: "兴趣爱好"
       url: "/index.xml"
+      weight: 3
 
 params:
-  description: "Talent is enduring patience;以教促学，以赛代练"
+  description: "enduring patience"
   footer: "&copy; [Nao Yu](https://github.com/sportnerdy/naoyu) 2023-{Year} | [Github](https://github.com/sportnerdy/naoyu)"
   highlightjsLang: ["latex"]
   highlightjsTheme: "github"
