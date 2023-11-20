@@ -30,7 +30,7 @@ menu:
       url: "/index.xml"
 
 params:
-  description: "Talent is enduring patience;以教促学，以赛代练"
+  description: "enduring patience"
   footer: "&copy; [Nao Yu](https://github.com/sportnerdy/naoyu) 2023-{Year} | [Github](https://github.com/sportnerdy/naoyu)"
   highlightjsLang: ["latex"]
   highlightjsTheme: "github"
