@@ -104,8 +104,8 @@ library(kableExtra)#not kable
 library(readxl)
 library(dplyr)
 
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "DataBase") %>% 
-#C:/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "DataBase") %>% 
+#C:D:/桌面/Meta-analysis/Supplementary data/NY_Sup
 # Paper_search_data <- data %>% 
 #   dplyr::select(Database, Boolean, everything()) %>% 
   kable(align = "c",  caption = "文献检索关键词和数据库") %>%
@@ -315,7 +315,7 @@ TOTAL
 knitr::include_graphics("C:/Users/12570/Desktop/NY/forest.png")
 ```
 
-<img src="../../../../../../NY/forest.png" width="616" />
+<img src="C:/Users/12570/Desktop/NY/forest.png" width="616" />
 
 ### 异质性分析
 
@@ -368,10 +368,10 @@ knitr::include_graphics("C:/Users/12570/Desktop/NY/forest.png")
 > *“R is for research, python is for production”*.
 
 - 分析语句数量对比
-  <img src="../../../../../../NY/IMG_5488.JPG" width="100%" height="100%" />
+  <img src="C:/Users/12570/Desktop/NY/IMG_5488.JPG" width="100%" height="100%" />
 
 - 运行时间对比
-  <img src="../../../../../../NY/IMG_5489.JPG" width="100%" height="100%" />
+  <img src="C:/Users/12570/Desktop/NY/IMG_5489.JPG" width="100%" height="100%" />
 
 ## 基本对象(数据结构)
 
@@ -520,7 +520,7 @@ FuncName <- function (arglist) {
 devtools::session_info() #编译本教程所用的R软件环境：
 ## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
-##  version  R version 4.3.1 (2023-06-16 ucrt)
+##  version  R version 4.3.2 (2023-10-31 ucrt)
 ##  os       Windows 11 x64 (build 22621)
 ##  system   x86_64, mingw32
 ##  ui       RTerm
@@ -528,94 +528,95 @@ devtools::session_info() #编译本教程所用的R软件环境：
 ##  collate  Chinese (Simplified)_China.utf8
 ##  ctype    Chinese (Simplified)_China.utf8
 ##  tz       Asia/Shanghai
-##  date     2023-11-06
-##  pandoc   3.1.1 @ D:/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
+##  date     2023-11-22
+##  pandoc   3.1.1 @ C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package     * version date (UTC) lib source
-##  blogdown      1.18    2023-06-19 [1] CRAN (R 4.3.1)
-##  bookdown      0.36    2023-10-16 [1] CRAN (R 4.3.1)
-##  bslib         0.5.1   2023-08-11 [1] CRAN (R 4.3.1)
-##  cachem        1.0.8   2023-05-01 [1] CRAN (R 4.3.1)
-##  callr         3.7.3   2022-11-02 [1] CRAN (R 4.3.1)
-##  cellranger    1.1.0   2016-07-27 [1] CRAN (R 4.3.1)
-##  cli           3.6.1   2023-03-23 [1] CRAN (R 4.3.1)
-##  colorspace    2.1-0   2023-01-23 [1] CRAN (R 4.3.1)
-##  crayon        1.5.2   2022-09-29 [1] CRAN (R 4.3.1)
-##  devtools      2.4.5   2022-10-11 [1] CRAN (R 4.3.1)
-##  digest        0.6.33  2023-07-07 [1] CRAN (R 4.3.1)
-##  dplyr       * 1.1.3   2023-09-03 [1] CRAN (R 4.3.1)
-##  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.3.1)
-##  evaluate      0.22    2023-09-29 [1] CRAN (R 4.3.1)
-##  fansi         1.0.5   2023-10-08 [1] CRAN (R 4.3.1)
-##  fastmap       1.1.1   2023-02-24 [1] CRAN (R 4.3.1)
-##  fs            1.6.3   2023-07-20 [1] CRAN (R 4.3.1)
-##  generics      0.1.3   2022-07-05 [1] CRAN (R 4.3.1)
-##  glue          1.6.2   2022-02-24 [1] CRAN (R 4.3.1)
-##  highr         0.10    2022-12-22 [1] CRAN (R 4.3.1)
-##  htmltools   * 0.5.6.1 2023-10-06 [1] CRAN (R 4.3.1)
-##  htmlwidgets   1.6.2   2023-03-17 [1] CRAN (R 4.3.1)
-##  httpuv        1.6.11  2023-05-11 [1] CRAN (R 4.3.1)
-##  httr          1.4.7   2023-08-15 [1] CRAN (R 4.3.1)
-##  jquerylib     0.1.4   2021-04-26 [1] CRAN (R 4.3.1)
-##  jsonlite      1.8.7   2023-06-29 [1] CRAN (R 4.3.1)
-##  kableExtra  * 1.3.4   2021-02-20 [1] CRAN (R 4.3.1)
-##  knitr       * 1.44    2023-09-11 [1] CRAN (R 4.3.1)
-##  later         1.3.1   2023-05-02 [1] CRAN (R 4.3.1)
-##  lifecycle     1.0.3   2022-10-07 [1] CRAN (R 4.3.1)
-##  magrittr      2.0.3   2022-03-30 [1] CRAN (R 4.3.1)
-##  memoise       2.0.1   2021-11-26 [1] CRAN (R 4.3.1)
-##  mime          0.12    2021-09-28 [1] CRAN (R 4.3.0)
-##  miniUI        0.1.1.1 2018-05-18 [1] CRAN (R 4.3.1)
-##  munsell       0.5.0   2018-06-12 [1] CRAN (R 4.3.1)
-##  pillar        1.9.0   2023-03-22 [1] CRAN (R 4.3.1)
-##  pkgbuild      1.4.2   2023-06-26 [1] CRAN (R 4.3.1)
-##  pkgconfig     2.0.3   2019-09-22 [1] CRAN (R 4.3.1)
-##  pkgload       1.3.3   2023-09-22 [1] CRAN (R 4.3.1)
-##  png           0.1-8   2022-11-29 [1] CRAN (R 4.3.0)
-##  prettyunits   1.2.0   2023-09-24 [1] CRAN (R 4.3.1)
-##  processx      3.8.2   2023-06-30 [1] CRAN (R 4.3.1)
-##  profvis       0.3.8   2023-05-02 [1] CRAN (R 4.3.1)
-##  promises      1.2.1   2023-08-10 [1] CRAN (R 4.3.1)
-##  ps            1.7.5   2023-04-18 [1] CRAN (R 4.3.1)
-##  purrr         1.0.2   2023-08-10 [1] CRAN (R 4.3.1)
-##  R6            2.5.1   2021-08-19 [1] CRAN (R 4.3.1)
-##  Rcpp          1.0.11  2023-07-06 [1] CRAN (R 4.3.1)
-##  readxl      * 1.4.3   2023-07-06 [1] CRAN (R 4.3.1)
-##  remotes       2.4.2.1 2023-07-18 [1] CRAN (R 4.3.1)
-##  rlang         1.1.1   2023-04-28 [1] CRAN (R 4.3.1)
-##  rmarkdown     2.25    2023-09-18 [1] CRAN (R 4.3.1)
-##  rstudioapi    0.15.0  2023-07-07 [1] CRAN (R 4.3.1)
-##  rvest         1.0.3   2022-08-19 [1] CRAN (R 4.3.1)
-##  sass          0.4.7   2023-07-15 [1] CRAN (R 4.3.1)
-##  scales        1.2.1   2022-08-20 [1] CRAN (R 4.3.1)
-##  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.3.1)
-##  shiny         1.7.5.1 2023-10-14 [1] CRAN (R 4.3.1)
-##  stringi       1.7.12  2023-01-11 [1] CRAN (R 4.3.0)
-##  stringr       1.5.0   2022-12-02 [1] CRAN (R 4.3.1)
-##  svglite       2.1.2   2023-10-11 [1] CRAN (R 4.3.1)
-##  systemfonts   1.0.5   2023-10-09 [1] CRAN (R 4.3.1)
-##  tibble      * 3.2.1   2023-03-20 [1] CRAN (R 4.3.1)
-##  tidyselect    1.2.0   2022-10-10 [1] CRAN (R 4.3.1)
-##  urlchecker    1.0.1   2021-11-30 [1] CRAN (R 4.3.1)
-##  usethis       2.2.2   2023-07-06 [1] CRAN (R 4.3.1)
-##  utf8          1.2.3   2023-01-31 [1] CRAN (R 4.3.1)
-##  vctrs         0.6.4   2023-10-12 [1] CRAN (R 4.3.1)
-##  viridisLite   0.4.2   2023-05-02 [1] CRAN (R 4.3.1)
-##  webshot       0.5.5   2023-06-26 [1] CRAN (R 4.3.1)
-##  xfun          0.40    2023-08-09 [1] CRAN (R 4.3.1)
-##  xml2          1.3.5   2023-07-06 [1] CRAN (R 4.3.1)
-##  xtable        1.8-4   2019-04-21 [1] CRAN (R 4.3.1)
-##  yaml          2.3.7   2023-01-23 [1] CRAN (R 4.3.0)
+##  blogdown      1.18    2023-06-19 [1] CRAN (R 4.3.2)
+##  bookdown      0.36    2023-10-16 [1] CRAN (R 4.3.2)
+##  bslib         0.5.1   2023-08-11 [1] CRAN (R 4.3.2)
+##  cachem        1.0.8   2023-05-01 [1] CRAN (R 4.3.2)
+##  callr         3.7.3   2022-11-02 [1] CRAN (R 4.3.2)
+##  cellranger    1.1.0   2016-07-27 [1] CRAN (R 4.3.2)
+##  cli           3.6.1   2023-03-23 [1] CRAN (R 4.3.2)
+##  colorspace    2.1-0   2023-01-23 [1] CRAN (R 4.3.2)
+##  crayon        1.5.2   2022-09-29 [1] CRAN (R 4.3.2)
+##  devtools      2.4.5   2022-10-11 [1] CRAN (R 4.3.2)
+##  digest        0.6.33  2023-07-07 [1] CRAN (R 4.3.2)
+##  dplyr       * 1.1.4   2023-11-17 [1] CRAN (R 4.3.2)
+##  ellipsis      0.3.2   2021-04-29 [1] CRAN (R 4.3.2)
+##  evaluate      0.23    2023-11-01 [1] CRAN (R 4.3.2)
+##  fansi         1.0.5   2023-10-08 [1] CRAN (R 4.3.2)
+##  fastmap       1.1.1   2023-02-24 [1] CRAN (R 4.3.2)
+##  fs            1.6.3   2023-07-20 [1] CRAN (R 4.3.2)
+##  generics      0.1.3   2022-07-05 [1] CRAN (R 4.3.2)
+##  glue          1.6.2   2022-02-24 [1] CRAN (R 4.3.2)
+##  highr         0.10    2022-12-22 [1] CRAN (R 4.3.2)
+##  htmltools   * 0.5.7   2023-11-03 [1] CRAN (R 4.3.2)
+##  htmlwidgets   1.6.2   2023-03-17 [1] CRAN (R 4.3.2)
+##  httpuv        1.6.12  2023-10-23 [1] CRAN (R 4.3.2)
+##  httr          1.4.7   2023-08-15 [1] CRAN (R 4.3.2)
+##  jquerylib     0.1.4   2021-04-26 [1] CRAN (R 4.3.2)
+##  jsonlite      1.8.7   2023-06-29 [1] CRAN (R 4.3.2)
+##  kableExtra  * 1.3.4   2021-02-20 [1] CRAN (R 4.3.2)
+##  knitr       * 1.45    2023-10-30 [1] CRAN (R 4.3.2)
+##  later         1.3.1   2023-05-02 [1] CRAN (R 4.3.2)
+##  lifecycle     1.0.4   2023-11-07 [1] CRAN (R 4.3.2)
+##  magrittr      2.0.3   2022-03-30 [1] CRAN (R 4.3.2)
+##  memoise       2.0.1   2021-11-26 [1] CRAN (R 4.3.2)
+##  mime          0.12    2021-09-28 [1] CRAN (R 4.3.1)
+##  miniUI        0.1.1.1 2018-05-18 [1] CRAN (R 4.3.2)
+##  munsell       0.5.0   2018-06-12 [1] CRAN (R 4.3.2)
+##  pillar        1.9.0   2023-03-22 [1] CRAN (R 4.3.2)
+##  pkgbuild      1.4.2   2023-06-26 [1] CRAN (R 4.3.2)
+##  pkgconfig     2.0.3   2019-09-22 [1] CRAN (R 4.3.2)
+##  pkgload       1.3.3   2023-09-22 [1] CRAN (R 4.3.2)
+##  png           0.1-8   2022-11-29 [1] CRAN (R 4.3.1)
+##  prettyunits   1.2.0   2023-09-24 [1] CRAN (R 4.3.2)
+##  processx      3.8.2   2023-06-30 [1] CRAN (R 4.3.2)
+##  profvis       0.3.8   2023-05-02 [1] CRAN (R 4.3.2)
+##  promises      1.2.1   2023-08-10 [1] CRAN (R 4.3.2)
+##  ps            1.7.5   2023-04-18 [1] CRAN (R 4.3.2)
+##  purrr         1.0.2   2023-08-10 [1] CRAN (R 4.3.2)
+##  R6            2.5.1   2021-08-19 [1] CRAN (R 4.3.2)
+##  Rcpp          1.0.11  2023-07-06 [1] CRAN (R 4.3.2)
+##  readxl      * 1.4.3   2023-07-06 [1] CRAN (R 4.3.2)
+##  remotes       2.4.2.1 2023-07-18 [1] CRAN (R 4.3.2)
+##  rlang         1.1.2   2023-11-04 [1] CRAN (R 4.3.2)
+##  rmarkdown     2.25    2023-09-18 [1] CRAN (R 4.3.2)
+##  rstudioapi    0.15.0  2023-07-07 [1] CRAN (R 4.3.2)
+##  rvest         1.0.3   2022-08-19 [1] CRAN (R 4.3.2)
+##  sass          0.4.7   2023-07-15 [1] CRAN (R 4.3.2)
+##  scales        1.2.1   2022-08-20 [1] CRAN (R 4.3.2)
+##  sessioninfo   1.2.2   2021-12-06 [1] CRAN (R 4.3.2)
+##  shiny         1.7.5.1 2023-10-14 [1] CRAN (R 4.3.2)
+##  stringi       1.8.1   2023-11-13 [1] CRAN (R 4.3.2)
+##  stringr       1.5.1   2023-11-14 [1] CRAN (R 4.3.2)
+##  svglite       2.1.2   2023-10-11 [1] CRAN (R 4.3.2)
+##  systemfonts   1.0.5   2023-10-09 [1] CRAN (R 4.3.2)
+##  tibble      * 3.2.1   2023-03-20 [1] CRAN (R 4.3.2)
+##  tidyselect    1.2.0   2022-10-10 [1] CRAN (R 4.3.2)
+##  urlchecker    1.0.1   2021-11-30 [1] CRAN (R 4.3.2)
+##  usethis       2.2.2   2023-07-06 [1] CRAN (R 4.3.2)
+##  utf8          1.2.4   2023-10-22 [1] CRAN (R 4.3.2)
+##  vctrs         0.6.4   2023-10-12 [1] CRAN (R 4.3.2)
+##  viridisLite   0.4.2   2023-05-02 [1] CRAN (R 4.3.2)
+##  webshot       0.5.5   2023-06-26 [1] CRAN (R 4.3.2)
+##  xfun          0.41    2023-11-01 [1] CRAN (R 4.3.2)
+##  xml2          1.3.5   2023-07-06 [1] CRAN (R 4.3.2)
+##  xtable        1.8-4   2019-04-21 [1] CRAN (R 4.3.2)
+##  yaml          2.3.7   2023-01-23 [1] CRAN (R 4.3.2)
 ## 
-##  [1] D:/R-4.3.1/library
+##  [1] C:/Users/12570/AppData/Local/R/win-library/4.3
+##  [2] C:/Program Files/R/R-4.3.2/library
 ## 
 ## ──────────────────────────────────────────────────────────────────────────────
 ```
 
 <div class="figure">
 
-<img src="../../../../../../NY/sucidal_meta copy.png" alt="参考的脑电元分析" width="100%" />
+<img src="C:/Users/12570/Desktop/NY/sucidal_meta copy.png" alt="参考的脑电元分析" width="100%" />
 <p class="caption">
 <span id="fig:unnamed-chunk-14"></span>Figure 1: 参考的脑电元分析
 </p>
@@ -660,7 +661,7 @@ R语言是一种语言, 里面所包含的包也可以当成一种小语言,函�
 - Data visualizing (ggplot2)
 - Data analysis (Program_purrr: provide funtitons, - magrittr)
 - Data modeling (broom)
-- R version 4.3.1 (2023-06-16 ucrt).
+- R version 4.3.2 (2023-10-31 ucrt).
 
 ``` r
 
@@ -757,7 +758,7 @@ cowplot
 dplyr
 </td>
 <td style="text-align:left;">
-1.1.3
+1.1.4
 </td>
 </tr>
 <tr>
@@ -789,7 +790,7 @@ ggplot2
 ggthemes
 </td>
 <td style="text-align:left;">
-4.2.4
+5.0.0
 </td>
 </tr>
 <tr>
@@ -805,7 +806,7 @@ gridExtra
 htmltools
 </td>
 <td style="text-align:left;">
-0.5.6.1
+0.5.7
 </td>
 </tr>
 <tr>
@@ -821,7 +822,7 @@ kableExtra
 knitr
 </td>
 <td style="text-align:left;">
-1.44
+1.45
 </td>
 </tr>
 <tr>
@@ -853,7 +854,7 @@ metaviz
 plotly
 </td>
 <td style="text-align:left;">
-4.10.2
+4.10.3
 </td>
 </tr>
 <tr>
@@ -949,9 +950,9 @@ prisma(found = 298,
 library(readxl)
 library(tidyverse)
 library(kableExtra)
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
 
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
 
 meta_data <- data %>%
   dplyr::select(Study_ID, effect_id, Description, type, g, var_g, everything()) %>%  

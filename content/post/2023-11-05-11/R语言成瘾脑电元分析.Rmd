@@ -96,8 +96,8 @@ library(kableExtra)#not kable
 library(readxl)
 library(dplyr)
 
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "DataBase") %>% 
-#C:/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "DataBase") %>% 
+#C:D:/桌面/Meta-analysis/Supplementary data/NY_Sup
 # Paper_search_data <- data %>% 
 #   dplyr::select(Database, Boolean, everything()) %>% 
   kable(align = "c",  caption = "文献检索关键词和数据库") %>%
@@ -424,9 +424,9 @@ prisma(found = 298,
 library(readxl)
 library(tidyverse)
 library(kableExtra)
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
 
-data <- read_excel("/Users/12570/Desktop/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
+data <- read_excel("D:/桌面/Meta-analysis/Supplementary data/NY_Sup/Suicidal_meta_spreadsheet.xlsx", sheet = "effect_size_coding")
 
 meta_data <- data %>%
   dplyr::select(Study_ID, effect_id, Description, type, g, var_g, everything()) %>%  

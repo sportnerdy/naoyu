@@ -21,7 +21,7 @@ menu:
       url: "/about/"
       weight: 2
     - name: "兴趣爱好"
-      url: "/index.xml"
+      url: "/"
       weight: 3
 
 params:
