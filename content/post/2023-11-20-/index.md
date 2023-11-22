@@ -8,8 +8,8 @@ tags: []
 ---
 
 **Hidden Potential: The Science of Achieving Greater Things**
-
-最能预测未来收入的素质不是数学和阅读那些认知技能，而是四项品格技能:
+From dedao APP:
+"最能预测未来收入的素质不是数学和阅读那些认知技能，而是四项品格技能:
 
 1. 积极主动（Proactive）：主动提出问题、主动回答问题、主动从书本中寻找信息、主动在课外向老师请教；
 
@@ -29,4 +29,4 @@ tags: []
 
 第三是「社会默认（The Social Default）」：你总想做跟别人一样的事儿，因为你害怕成为局外人。
 
-第四种本能是「惯性默认（The Inertia Default）」：你会持续做自己习惯做的事情，抵制变化。
+第四种本能是「惯性默认（The Inertia Default）」：你会持续做自己习惯做的事情，抵制变化。"
