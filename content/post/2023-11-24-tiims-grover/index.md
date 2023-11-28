@@ -13,7 +13,6 @@ Please enjoy its contents:
 
 **1，Don't Think** 
 
-
 **2，The Cleaner You Are, the Dirtier You Get**
 
 **3，When You're a Cleaner,You keep pushing yourself harder when everyone else has had enough.**
